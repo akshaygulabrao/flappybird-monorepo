@@ -17,7 +17,9 @@ I contribute:
 - Utilizing Function Approximation instead of a Q-table
 
 ## Handcrafted evaluation function
-- I used a handcrafted evaluation function to properly test certain hyperparameters of the neural network
+- I made a handcrafted evaluation function.
+- It gets approximately 900 on a training run of 10 runs with a score limit of 1000.
+- I can measure the success of the reinforcement learning agents utilizing how 
 
 ## Simplified State Space
 - How well do the other benchmarks perform?
