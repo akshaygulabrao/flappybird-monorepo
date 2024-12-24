@@ -1,4 +1,4 @@
-# Example test cases that always pass
+"""Sanity tests. Should always pass."""
 
 
 def test_placeholder():
@@ -13,7 +13,6 @@ def test_always_equal():
 
 def test_no_exception():
     """This test does nothing and passes."""
-    pass
 
 
 def test_function_return_value():
