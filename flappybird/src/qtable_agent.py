@@ -51,11 +51,12 @@ class Agent:
         self.alpha = 0.1
         self.gamma = 0.9
         self.lambda_ = 0.9
-        self.epsilon = 1
+        self.epsilon = 0.5
 
     def decide(self, state):
         if np.random.rand() < self.epsilon:
-            return epsilon_greedy_agent(state)
+            # return epsilon_greedy_agent(state,normalize=True)
+            return np.random.choice([0,1],p=[0.9,0.1])
         else:
             return max([0, 1], key=lambda x: self.q_table[state][x])
 
@@ -93,29 +94,35 @@ if __name__ == "__main__":
     env = gymnasium.make(
         "FlappyBird-v0",
         audio_on=True,
-        render_mode=None,
+        render_mode='human',
         use_lidar=False,
         normalize_obs=True,
-        score_limit=1000,
+        score_limit=1,
     )
     score = 0
-    for i in tqdm.tqdm(range(int(1e6))):
-        agent.eligibility_traces = defaultdict(int)
-        obs, _ = env.reset()
-        while True:
-            action = agent.decide(tuple(obs.tolist()))
-            next_obs, reward, done, term, info = env.step(action)
-            reward = float(reward)
-            agent.update(tuple(obs.tolist()), action, reward, tuple(next_obs.tolist()))
-            obs = next_obs
-            if done or term:
-                score += info["score"]
-                break
-        if i % 10000 == 0:
-            score= 0 
-            df = pd.DataFrame(
-                [list(k) + v for (k, v) in agent.q_table.items()],
-                columns=columns + ["flap", "no_flap"],
-            )
-            df.to_csv(agent.path, index=False)
-    df.to_csv(agent.path, index=False)
+    try:
+        for i in tqdm.tqdm(range(int(1e6))):
+            agent.eligibility_traces = defaultdict(int)
+            obs, _ = env.reset()
+            while True:
+                action = agent.decide(tuple(obs.tolist()))
+                next_obs, reward, done, term, info = env.step(action)
+                reward = float(reward)
+                agent.update(tuple(obs.tolist()), action, reward, tuple(next_obs.tolist()))
+                obs = next_obs
+                if done or term:
+                    score += info["score"]
+                    break
+            if i % 100000 == 0:
+                score= 0 
+                df = pd.DataFrame(
+                    [list(k) + v for (k, v) in agent.q_table.items()],
+                    columns=columns + ["flap", "no_flap"],
+                )
+                df.to_csv(agent.path, index=False)
+    except KeyboardInterrupt:
+        print("Catching KeyboardInterrupt, saving qtable`")
+        pass
+    finally:
+        df.to_csv(agent.path, index=False)
+        print("Saved qtable")
