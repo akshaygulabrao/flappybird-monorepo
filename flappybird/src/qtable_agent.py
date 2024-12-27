@@ -5,9 +5,38 @@ import gymnasium
 import numpy as np
 import pandas as pd
 import flappy_bird_gymnasium
-from src.handcrafted_agent import agent
 
-
+def epsilon_greedy_agent(obs,normalize=False):
+    if not normalize:
+        pipe = 0
+        if obs[0] < 5:
+            pipe = 1
+        x = obs[pipe *3]
+        bot = obs[pipe * 3 + 2]
+        top = obs[pipe * 3 + 1]
+        y_next = obs[-2] + obs[-1] + 24 + 1
+        if 74 < x < 88 and obs[-2] - 45 >= top:
+            return 1
+        elif y_next >= bot:
+            return 1
+        return 0
+    else:
+        pipe = 0
+        if obs[0] < 5/288:
+            pipe = 1
+        x = obs[pipe *3]
+        bot = obs[pipe * 3 + 2]
+        top = obs[pipe * 3 + 1]
+   
+        y_next = obs[-2] + (obs[-1]*10) / 512 # current y + current y_velocity
+        y_next += 1/512 # 1 pixel acceleration per frame
+        y_next += 24/512 # height of bird
+        if 72/288 < x < 88/288 and obs[-2] - 45/512 >= top:
+                return 1
+        elif y_next >= bot:
+            return 1
+        return 0
+    
 class Agent:
     def __init__(self, path=None):
         self.path = path
@@ -22,11 +51,11 @@ class Agent:
         self.alpha = 0.1
         self.gamma = 0.9
         self.lambda_ = 0.9
-        self.epsilon = 0.5
+        self.epsilon = 1
 
     def decide(self, state):
         if np.random.rand() < self.epsilon:
-            return np.random.randint(2)
+            return epsilon_greedy_agent(state)
         else:
             return max([0, 1], key=lambda x: self.q_table[state][x])
 
@@ -82,12 +111,11 @@ if __name__ == "__main__":
             if done or term:
                 score += info["score"]
                 break
-        if i % 1000 == 0:
+        if i % 10000 == 0:
             score= 0 
             df = pd.DataFrame(
-                [list(k) + v for k, v in agent.q_table.items()],
+                [list(k) + v for (k, v) in agent.q_table.items()],
                 columns=columns + ["flap", "no_flap"],
             )
             df.to_csv(agent.path, index=False)
-    print(f"Average score: {score / 1000}")
     df.to_csv(agent.path, index=False)
