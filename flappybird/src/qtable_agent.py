@@ -67,6 +67,7 @@ columns = [
 ]
 
 if __name__ == "__main__":
+    assert flappy_bird_gymnasium
     agent = QTable_Agent(path="data/qtable.csv")
     env = gymnasium.make(
         "FlappyBird-v0",
