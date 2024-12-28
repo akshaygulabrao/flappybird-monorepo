@@ -3,7 +3,7 @@
 import gymnasium
 import flappy_bird_gymnasium
 import tqdm
-from flappybird.src import handcrafted_agent
+from handcrafted_agent import handcrafted_agent
 
 def play(env,play_fn):
     """

@@ -5,7 +5,7 @@ import gymnasium
 import numpy as np
 import pandas as pd
 import flappy_bird_gymnasium
-import src.handcrafted_agent
+from handcrafted_agent import handcrafted_agent
 
 
 ACTION_FLAP = 1
@@ -33,7 +33,7 @@ class QTable_Agent:
             state = tuple(state)
         if np.random.rand() < self.epsilon:
             # for testing, we want the feedback to be perfect
-            return src.handcrafted_agent(state,normalize=True)
+            return handcrafted_agent(state,normalize=True)
         else:
             return max([ACTION_NO_FLAP, ACTION_FLAP], key=lambda x: self.q_table[state][x])
 

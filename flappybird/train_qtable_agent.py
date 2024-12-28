@@ -1,15 +1,14 @@
 from collections import defaultdict
 import os
-import tqdm
 import gymnasium
 import numpy as np
 import pandas as pd
 import flappy_bird_gymnasium
-import src.handcrafted_agent
+from handcrafted_agent import handcrafted_agent
 
-    
 class QTable_Agent:
-    def __init__(self, path=None):
+    def __init__(self, path=None,sanity_check=False):
+        self.sanity_check = sanity_check
         self.path = path
         if not os.path.exists(self.path):
             self.q_table = defaultdict(lambda: [0, 0])
@@ -18,6 +17,8 @@ class QTable_Agent:
             df = pd.read_csv(self.path)
             for row in df.itertuples(index=False, name=None):
                 self.q_table[tuple(row[:11])] = list(row[11:])
+            print(f"Loaded qtable from {self.path}")
+            print(f"Qtable shape: {len(self.q_table)}")
 
         self.alpha = 0.1
         self.gamma = 0.9
@@ -28,8 +29,10 @@ class QTable_Agent:
         if not isinstance(state, tuple):
             state = tuple(state)
         if np.random.rand() < self.epsilon:
-            return src.handcrafted_agent(state,normalize=True)
-            # return np.random.choice([0,1],p=[0.9,0.1])
+            if self.sanity_check:
+                return handcrafted_agent(state,normalize=True)
+            else:
+                return np.random.choice([0,1],p=[0.9,0.1])
         else:
             return max([0, 1], key=lambda x: self.q_table[state][x])
 
@@ -68,18 +71,19 @@ columns = [
 
 if __name__ == "__main__":
     assert flappy_bird_gymnasium
-    agent = QTable_Agent(path="data/qtable.csv")
+    agent = QTable_Agent(path="data/qtable.csv",sanity_check=False)
+    log_frequency= int(1e3)
     env = gymnasium.make(
         "FlappyBird-v0",
         audio_on=True,
-        render_mode='human',
+        # render_mode='human',
         use_lidar=False,
         normalize_obs=True,
         score_limit=1,
     )
     score = 0
     try:
-        for i in tqdm.tqdm(range(int(1e6))):
+        for i in range(int(1e6)):
             agent.eligibility_traces = defaultdict(int)
             obs, _ = env.reset()
             while True:
@@ -91,8 +95,9 @@ if __name__ == "__main__":
                 if done or term:
                     score += info["score"]
                     break
-            if i % 100000 == 0:
-                score= 0 
+            if (i+1) % log_frequency == 0:
+                print(f"Run {i+1:5d} complete, average score: {score/log_frequency:.2f}, qtable size: {len(agent.q_table)}")
+                score = 0
                 df = pd.DataFrame(
                     [list(k) + v for (k, v) in agent.q_table.items()],
                     columns=columns + ["flap", "no_flap"],
