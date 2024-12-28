@@ -9,7 +9,7 @@ from handcrafted_agent import handcrafted_agent
 
 
 class QTable_Agent:
-    def __init__(self, path=None, sanity_check=False):
+    def __init__(self, path=None, sanity_check=True):
         """
         Initializes the QTable_Agent.
 
@@ -18,15 +18,14 @@ class QTable_Agent:
             sanity_check (bool): Whether to use the handcrafted agent for the epsilon-greedy policy.
         """
         self.sanity_check = sanity_check
-        self.path = path.replace('.csv', '.pkl')
         self.eligibility_traces = defaultdict(int)
-        self.q_table = defaultdict(lambda: [0, 0])
-
+        self.q_table = defaultdict(lambda: [0, -1])
+        self.path = path
         if os.path.exists(self.path):
             try:
                 with open(self.path, 'rb') as f:
                     items = pickle.load(f)
-                    self.q_table = defaultdict(lambda: [0, 0], items)
+                    self.q_table = defaultdict(lambda: [0, -1], items)
                 print(f"Loaded qtable from {self.path}")
                 print(f"Qtable shape: {len(self.q_table)}")
             except Exception as e:
@@ -35,10 +34,10 @@ class QTable_Agent:
         else:
             print(f"No qtable found at {self.path}, starting from scratch")
 
-        self.alpha = 0.1
+        self.alpha = 0.01
         self.gamma = 0.9
         self.lambda_ = 0.9
-        self.epsilon = 0.1
+        self.epsilon = 0.01
 
     def to_tuple(self, state):
         if not isinstance(state, tuple):
@@ -61,7 +60,7 @@ class QTable_Agent:
             if self.sanity_check:
                 return handcrafted_agent(state, normalize=True)
             else:
-                return np.random.choice([0, 1], p=[0.9, 0.1])
+                return np.random.choice([0, 1], p=[0.95, 0.05])
         else:
             return max([0, 1], key=lambda x: self.q_table[state][x])
 
@@ -97,34 +96,45 @@ class QTable_Agent:
 
 if __name__ == "__main__":
     assert flappy_bird_gymnasium
-    agent = QTable_Agent(path="data/qtable.pkl", sanity_check=False)
+    agent = QTable_Agent(path="data/qtable.pkl", sanity_check=True)
     log_frequency = int(1e3)
+    max_episodes = int(1e6)
     env = gymnasium.make(
         "FlappyBird-v0",
         audio_on=True,
         use_lidar=False,
+        # render_mode='human',
         normalize_obs=True,
         score_limit=1,
     )
     score = 0
+    reward_sum = 0
     try:
-        for i in range(int(1e5)):
+        for i in range(max_episodes):
             agent.eligibility_traces = defaultdict(int)
+            # agent.epsilon = 1 - (i+1)/max_episodes
             obs, _ = env.reset()
             while True:
                 action = agent.decide(tuple(obs.tolist()))
                 next_obs, reward, done, term, info = env.step(action)
                 reward = float(reward)
+                reward_sum += reward
                 agent.update(tuple(obs.tolist()), action, reward, tuple(next_obs.tolist()))
                 obs = next_obs
                 if done or term:
                     score += info["score"]
+                    reward_sum += reward
                     break
             if (i + 1) % log_frequency == 0:
                 print(
-                    f"Run {i+1:5d} complete, average score: {score/log_frequency:.2f}, qtable size: {len(agent.q_table)}"
+                    f"Run {i+1:5d} complete, "
+                    f"average score: {score/log_frequency:.2f}, "
+                    f"qtable size: {len(agent.q_table)}, "
+                    f"epsilon: {agent.epsilon:.2f},"
+                    f"reward: {reward_sum/log_frequency:.2f}"
                 )
                 score = 0
+                reward_sum = 0
                 with open(agent.path, 'wb') as f:
                     pickle.dump(dict(agent.q_table), f)
     except KeyboardInterrupt:
