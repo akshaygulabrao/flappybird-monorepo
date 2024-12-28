@@ -28,7 +28,7 @@ Simple handcrafted agent for Flappy Bird.
 """
 
 
-def agent(obs,normalize=False):
+def handcrafted_agent(obs,normalize=True):
     if not normalize:
         pipe = 0
         if obs[0] < 5:
