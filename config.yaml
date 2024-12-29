@@ -1,0 +1,33 @@
+# Agent hyperparameters
+learning_rate: 0.001
+discount_factor: 0.99
+epsilon: 1.0
+
+# Environment settings
+env:
+  name: "FlappyBird-v0"
+  audio_on: true
+  use_lidar: false
+  normalize_obs: true
+  score_limit: 10
+
+# Training parameters
+training:
+  episodes: 1000
+  max_steps: 100
+  epsilon_decay: 0.995
+  epsilon_min: 0.01
+
+# Testing parameters
+testing:
+  episodes: 100
+  max_steps: 100
+
+# Neural Network parameters
+network:
+  input_size: 8
+  hidden_size: [128, 64]
+  output_size: 2
+  batch_size: 32
+  memory_size: 100000
+  target_update_freq: 1000
