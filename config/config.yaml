@@ -13,7 +13,7 @@ env:
 
 # Training parameters
 training:
-  episodes: 1000
+  episodes: 1
   max_steps: 100
   epsilon_decay: 0.995
   epsilon_min: 0.01
@@ -27,7 +27,7 @@ testing:
 network:
   start_from_scratch: true
   weights_path: "weights/qlearningagent-0.pth"
-  input_size: 8
+  input_size: 12
   hidden_size: [128, 64]
   output_size: 2
   batch_size: 32

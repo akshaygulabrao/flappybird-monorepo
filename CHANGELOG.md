@@ -1,3 +1,9 @@
+## 0.3.0 (2024-12-28)
+
+### Feat
+
+- **qlearning-agent**: enhance QLearningAgent with Weights & Biases integration and action selection improvements
+
 ## 0.2.0 (2024-12-28)
 
 ### Feat
