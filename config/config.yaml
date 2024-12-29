@@ -1,40 +1,28 @@
-# Agent hyperparameters
-learning_rate: 0.001
-discount_factor: 0.99
-epsilon: 1.0
+train-from-scratch: true
 
-# Environment settings
-env:
-  name: "FlappyBird-v0"
-  audio_on: true
-  use_lidar: false
-  normalize_obs: true
-  score_limit: 10
-
-# Training parameters
-training:
-  episodes: 1
-  max_steps: 100
-  epsilon_decay: 0.995
-  epsilon_min: 0.01
-
-# Testing parameters
-testing:
-  episodes: 100
-  max_steps: 100
-
-# Neural Network parameters
-network:
-  start_from_scratch: true
-  weights_path: "weights/qlearningagent-0.pth"
-  input_size: 12
-  hidden_size: [128, 64]
-  output_size: 2
+model:
+  learning_rate: 1e-4
+  buffer_size: 1_000_000
+  learning_starts: 100
   batch_size: 32
-  memory_size: 100000
-  target_update_freq: 1000
-  learning_rate: 0.001
-  discount_factor: 0.99
-  epsilon: 1.0
-  epsilon_decay: 0.995
-  epsilon_min: 0.01
+  tau: 1.0
+  gamma: 0.99
+  train_freq: 4
+  gradient_steps: 1
+  optimize_memory_usage: false
+  target_update_interval: 10000
+  exploration_fraction: 0.1
+  exploration_initial_eps: 1.0
+  exploration_final_eps: 1e-5
+  max_grad_norm: 10
+  stats_window_size: 100
+  tensorboard_log: "logs/"
+  policy_kwargs: null
+  verbose: 0
+  seed: null
+  device: "auto"
+  _init_setup_model: true
+
+total_timesteps: 1_000_000
+tb_log_name: "dqn-0"
+reset_num_timesteps: false
