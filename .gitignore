@@ -3,3 +3,4 @@ data/*csv
 .cursorignore
 main.ipynb
 .cursorrules
+wandb/
