@@ -4,15 +4,23 @@ import flappy_bird_gymnasium
 import yaml
 from pathlib import Path
 import numpy as np
+import wandb
+
+ACTION_NO_FLAP = 0
+ACTION_FLAP = 1
+
 class QLearningAgent:
-    def __init__(self, config_path="/Users/ox/Documents/flappybird-monorepo/config.yaml"):
+    def __init__(self, config_path="/Users/ox/Documents/flappybird-monorepo/config/config.yaml"):
         assert flappy_bird_gymnasium
         assert torch
         self.config = self._load_config(config_path)
         self.learning_rate = self.config["learning_rate"]
         self.discount_factor = self.config["discount_factor"]
         self.epsilon = self.config["epsilon"]
-    
+        
+        wandb.init(project="flappybird", name="qlearningagent-1",
+                   notes="learning how wandb works, just testing the notes section")
+
     def _load_config(self, config_path):
         with open(Path(__file__).parent / config_path, 'r') as f:
             return yaml.safe_load(f)
@@ -38,6 +46,9 @@ class QLearningAgent:
                 state = next_state
                 if done or truncated:
                     break
+            wandb.log({"episode": i, "score":1})
+            if (i+1) % 100 == 0:
+                print(f"Episode {i+1} completed")
             
 
     def test(self, episodes=100, max_steps=100):
@@ -52,7 +63,7 @@ class QLearningAgent:
 
     def get_action(self, state):
         if np.random.rand() < self.epsilon:
-            return np.random.randint(self.env.action_space.n)
+            return np.random.choice([ACTION_NO_FLAP,ACTION_FLAP],prob=[0.95,.05])
         else:
             return np.argmax(self.q_table[state])
 

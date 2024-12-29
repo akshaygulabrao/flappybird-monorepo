@@ -25,9 +25,16 @@ testing:
 
 # Neural Network parameters
 network:
+  start_from_scratch: true
+  weights_path: "weights/qlearningagent-0.pth"
   input_size: 8
   hidden_size: [128, 64]
   output_size: 2
   batch_size: 32
   memory_size: 100000
   target_update_freq: 1000
+  learning_rate: 0.001
+  discount_factor: 0.99
+  epsilon: 1.0
+  epsilon_decay: 0.995
+  epsilon_min: 0.01
