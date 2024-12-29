@@ -1,3 +1,13 @@
+## 0.4.0 (2024-12-29)
+
+### Feat
+
+- use stable_baselines3 for DQN implementation
+
+### Fix
+
+- integrated env w torchrl
+
 ## 0.3.1 (2024-12-28)
 
 ### Fix
