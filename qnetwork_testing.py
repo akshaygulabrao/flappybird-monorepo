@@ -6,18 +6,19 @@ import gymnasium
 import torchrl.data
 import torch
 assert flappy_bird_gymnasium
+from torchrl.envs import GymWrapper
+from torchrl.objectives import DQNLoss, SoftUpdate
 
-env = gymnasium.make(
-    "FlappyBird-v0",
-    audio_on=True,
-    use_lidar=False,
-    normalize_obs=True,
-    score_limit=10,
+env = GymWrapper(
+    gymnasium.make(
+        "FlappyBird-v0",
+        audio_on=True,
+        use_lidar=False,
+        normalize_obs=True,
+        score_limit=10,
+    )
 )
 
-
-
-observation_spec = torchrl.data.tensor_specs.Bounded(shape=(12,),dtype=torch.float32,low=0,high=1)
 action_spec = torchrl.data.tensor_specs.Categorical(n=2)
 
 value_mlp = MLP(in_features=12, out_features=2, num_cells=[64, 64])
@@ -41,4 +42,35 @@ collector = SyncDataCollector(
     total_frames=-1,
     init_random_frames=init_rand_steps,
 )
-rb = ReplayBuffer(storage=LazyTensorStorage(100_000))
+total_count = 0
+total_episodes = 0
+t0 = time.time()
+for i, data in enumerate(collector):
+    # Write data in replay buffer
+    rb.extend(data)
+    max_length = rb[:]["next", "step_count"].max()
+    if len(rb) > init_rand_steps:
+        # Optim loop (we do several optim steps
+        # per batch collected for efficiency)
+        for _ in range(optim_steps):
+            sample = rb.sample(128)
+            loss_vals = loss(sample)
+            loss_vals["loss"].backward()
+            optim.step()
+            optim.zero_grad()
+            # Update exploration factor
+            exploration_module.step(data.numel())
+            # Update target params
+            updater.step()
+            if i % 10:
+                torchrl_logger.info(f"Max num steps: {max_length}, rb length {len(rb)}")
+            total_count += data.numel()
+            total_episodes += data["next", "done"].sum()
+    if max_length > 200:
+        break
+
+t1 = time.time()
+
+torchrl_logger.info(
+    f"solved after {total_count} steps, {total_episodes} episodes and in {t1-t0}s."
+)
