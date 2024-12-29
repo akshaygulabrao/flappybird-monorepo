@@ -1,3 +1,9 @@
+## 0.3.1 (2024-12-28)
+
+### Fix
+
+- Introduce qnetwork_testing.py and transition from torch to torchrl
+
 ## 0.3.0 (2024-12-28)
 
 ### Feat
