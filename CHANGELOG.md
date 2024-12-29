@@ -1,3 +1,13 @@
+## 0.2.0 (2024-12-28)
+
+### Feat
+
+- **qlearning-agent**: add QLearningAgent class for training and testing in FlappyBird environment
+
+### Refactor
+
+- add configuration and new agents for Flappy Bird
+
 ## 0.1.1 (2024-12-28)
 
 ### Fix
