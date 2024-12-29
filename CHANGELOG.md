@@ -1,3 +1,9 @@
+## 0.4.1 (2024-12-29)
+
+### Fix
+
+- use config.yaml file for qlearningagent.py
+
 ## 0.4.0 (2024-12-29)
 
 ### Feat
