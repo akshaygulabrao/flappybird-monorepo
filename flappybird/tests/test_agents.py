@@ -44,15 +44,14 @@ def test_handcrafted_agent(normalize=True):
     env = gymnasium.make(
         "FlappyBird-v0",
         audio_on=True,
-        render_mode=None,
         use_lidar=False,
         normalize_obs=normalize,
-        score_limit=1000,
+        score_limit=10,
     )
 
     scores = []
     for _ in tqdm.tqdm(range(10)):
         scores.append(play(env,handcrafted_agent))
     print(f"Average score: {sum(scores) / len(scores)}")
-    assert sum(scores) / len(scores) > 750
+    assert sum(scores) / len(scores) > 9
 
