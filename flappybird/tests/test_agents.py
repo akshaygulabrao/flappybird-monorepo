@@ -3,7 +3,7 @@
 import gymnasium
 import flappy_bird_gymnasium
 import tqdm
-from handcrafted_agent import handcrafted_agent
+from ..handcrafted_agent import handcrafted_agent
 
 def play(env,play_fn):
     """
@@ -54,4 +54,3 @@ def test_handcrafted_agent(normalize=True):
         scores.append(play(env,handcrafted_agent))
     print(f"Average score: {sum(scores) / len(scores)}")
     assert sum(scores) / len(scores) > 9
-

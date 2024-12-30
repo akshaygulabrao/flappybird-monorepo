@@ -4,3 +4,6 @@ data/*csv
 main.ipynb
 .cursorrules
 wandb/
+*zip
+logs/
+*svg

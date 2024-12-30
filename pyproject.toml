@@ -1,3 +1,7 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]  # Tools required for building
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "flappybird-monorepo"
 version = "0.1.0"
@@ -16,6 +20,10 @@ dependencies = [
     "wandb>=0.19.1",
 ]
 
+
+[tool.setuptools.packages.find]
+where = ["flappybird"]      
+
 [tool.ruff]
 line-length = 100
 
@@ -24,8 +32,12 @@ flappy-bird-gymnasium = { path = "../flappy-bird-gymnasium", editable = true }
 
 [tool.commitizen]
 name = "cz_conventional_commits"
-tag_format = "$version"
+tag_format = "v$version"
 version_scheme = "pep440"
 version = "0.4.1"
 update_changelog_on_bump = true
 major_version_zero = true
+bump_message = "chore(release): bump version to $version"
+post_bump_hooks = [
+    "sed -i '' 's/^version = \".*\"$/version = \"$VERSION\"/' pyproject.toml"
+]
