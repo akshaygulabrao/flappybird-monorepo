@@ -1,5 +1,5 @@
+train: true
 train-from-scratch: false
-
 model:
   learning_rate: .0001
   buffer_size: 1_000_000
