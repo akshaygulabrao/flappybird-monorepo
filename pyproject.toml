@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "flappybird-monorepo"
-version = "0.1.0"
+version = "v0.5.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
@@ -19,6 +19,7 @@ dependencies = [
     "torch-tb-profiler>=0.4.3",
     "torch>=2.5.1",
     "tqdm>=4.67.1",
+    "wandb>=0.19.1",
 ]
 
 
@@ -31,10 +32,10 @@ where = ["flappybird"]
 name = "cz_conventional_commits"
 tag_format = "v$version"
 version_scheme = "pep440"
-version = "0.5.0"
+version = "v$VERSION"
 update_changelog_on_bump = true
 major_version_zero = true
 bump_message = "chore(release): bump version to $version"
 post_bump_hooks = [
-    "sed -i '' 's/^version = \".*\"$/version = \"$VERSION\"/' pyproject.toml"
+    "sed -i '' 's/^version = \".*\"$/version = \"v$version\"/' pyproject.toml"
 ]

@@ -1,31 +1,17 @@
-train: false
-train-from-scratch: false
+# Model Configuration
 model:
-  learning_rate: .0001
-  buffer_size: 1_000_000
-  learning_starts: 100
-  batch_size: 32
-  tau: 1.0
-  gamma: 0.99
   train_freq: 4
   gradient_steps: 1
-  replay_buffer_class: null
-  replay_buffer_kwargs: null
-  optimize_memory_usage: false
-  target_update_interval: 10000
   exploration_fraction: 0.1
-  exploration_initial_eps: 1.0
-  exploration_final_eps: .00001
-  max_grad_norm: 10
-  stats_window_size: 100
-  tensorboard_log: "logs/"
-  policy_kwargs: null
-  verbose: 0
-  seed: null
-  device: "auto"
-  _init_setup_model: true
+  exploration_final_eps: 0.01
+  tensorboard_log: "./logs/tensorboard/"
 
-training-run:
-  total_timesteps: 1_000_000
-  tb_log_name: "dqn-0"
-  reset_num_timesteps: false
+# Training Configuration
+training:
+  total_timesteps: 10_000_000  # 10M steps
+
+# Evaluation Configuration
+evaluation:
+  eval_freq: 1_000_000       # Evaluate every 1M steps
+  n_eval_episodes: 100      # Number of episodes for evaluation
+  save_path: "./logs/best_model/"
