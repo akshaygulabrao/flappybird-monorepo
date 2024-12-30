@@ -1,5 +1,5 @@
-train: true
-train-from-scratch: true
+train: false
+train-from-scratch: false
 model:
   learning_rate: .0001
   buffer_size: 1_000_000
@@ -26,6 +26,6 @@ model:
   _init_setup_model: true
 
 training-run:
-total_timesteps: 10_000_000
-tb_log_name: "dqn-1"
-reset_num_timesteps: false
+  total_timesteps: 1_000_000
+  tb_log_name: "dqn-0"
+  reset_num_timesteps: false

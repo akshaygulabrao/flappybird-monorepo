@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=42", "wheel"]  # Tools required for building
+requires = ["setuptools>=42", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -9,32 +9,29 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "flappy-bird-gymnasium>=0.1.0",
+    "gymnasium>=1.0.0",
     "ipykernel>=6.29.5",
+    "numpy==1.26",
     "pandas>=2.2.3",
     "pre-commit>=4.0.1",
+    "pygame>=2.6.1",
     "pytest>=8.3.4",
     "torch-tb-profiler>=0.4.3",
     "torch>=2.5.1",
     "tqdm>=4.67.1",
-    "wandb>=0.19.1",
 ]
 
 
 [tool.setuptools.packages.find]
 where = ["flappybird"]      
 
-[tool.ruff]
-line-length = 100
 
-[tool.uv.sources]
-flappy-bird-gymnasium = { path = "../flappy-bird-gymnasium", editable = true }
 
 [tool.commitizen]
 name = "cz_conventional_commits"
 tag_format = "v$version"
 version_scheme = "pep440"
-version = "0.4.1"
+version = "0.5.0"
 update_changelog_on_bump = true
 major_version_zero = true
 bump_message = "chore(release): bump version to $version"

@@ -1,16 +1,20 @@
 import gymnasium as gym
-import flappy_bird_gymnasium 
 import numpy as np
 import stable_baselines3 as sb3
 import yaml
+import flappy_bird_env
 from stable_baselines3.common.monitor import Monitor
+from stable_baselines3.common.evaluation import evaluate_policy
 
-with open("config/config.yaml", "r") as file:
+
+assert flappy_bird_env
+with open("config/config.yaml", "r",encoding="utf-8") as file:
     config = yaml.safe_load(file)
 
 
 if config["train"]:
     env = gym.make("FlappyBird-v0", use_lidar=False)
+    env = Monitor(env, "logs/")
 
     if config["train-from-scratch"]:
         model = sb3.DQN(policy="MlpPolicy",
@@ -19,24 +23,30 @@ if config["train"]:
     else:
         model = sb3.DQN.load("dqn_flappy_bird",env=env)
 
-    model.learn(total_timesteps=config["total_timesteps"], 
-                tb_log_name=config["tb_log_name"],
-                reset_num_timesteps=config["reset_num_timesteps"],
+    model.learn(**config["training-run"],
                 progress_bar=True)
 
     model.save("dqn_flappy_bird")
-else:
-    scores = []
-    env = gym.make("FlappyBird-v0", use_lidar=False)
-    model = sb3.DQN.load("dqn_flappy_bird",env=env)
 
-    for i in range(1000):
-        obs,_ = env.reset()
-        while True:
-            action, _states = model.predict(obs, deterministic=True)
-            obs, reward, done, truncated, info = env.step(action)
-            if done or truncated:
-                scores.append(info['score'])
-                break
-    env.close()
-    print(np.mean(scores))
+else:
+    episode_rewards = []
+    final_scores = []
+    def callback(locals_, globals_):
+        if locals_['done']:
+            final_scores.append(locals_['info']['score'])
+        return True
+    
+    env = gym.make("FlappyBird-v0", use_lidar=False)
+    env = Monitor(env, "logs/")
+    model = sb3.DQN.load("dqn_flappy_bird",env=env)
+    # Evaluate the model
+    mean_reward, std_reward = evaluate_policy(
+        model, 
+        env, 
+        n_eval_episodes=100,
+        callback=callback,
+        deterministic=True,
+    )
+    print(f"Mean reward: {mean_reward:.2f} +/- {std_reward:.2f}")
+    print(f"Final scores: {np.mean(final_scores)}")
+

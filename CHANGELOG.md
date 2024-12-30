@@ -59,3 +59,32 @@
 ### Fix
 
 - added research in one repo
+
+## v0.5.0 (2024-12-29)
+
+### Feat
+
+- add Flappy Bird environment and constants
+- **qlearningagent**: enhance training flow and evaluation process
+- use stable_baselines3 for DQN implementation
+- **qlearning-agent**: enhance QLearningAgent with Weights & Biases integration and action selection improvements
+- **qlearning-agent**: add QLearningAgent class for training and testing in FlappyBird environment
+- Q-Table implemented and can pass one pipe
+- used binomial dist. for epsilon greedy
+- Eligibility traces for credit assignment
+- Off-policy Q-Learning
+
+### Fix
+
+- use config.yaml file for qlearningagent.py
+- integrated env w torchrl
+- Introduce qnetwork_testing.py and transition from torch to torchrl
+- removed qtable work
+- **qtable**: fixed bug with pandas serialization
+- added research in one repo
+
+### Refactor
+
+- moved rl files back into flappy bird dir
+- add configuration and new agents for Flappy Bird
+- **qtable_agent**: removes packaging code
