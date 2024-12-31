@@ -60,6 +60,14 @@
 
 - added research in one repo
 
+## v0.6.1 (2024-12-31)
+
+### Fix
+
+- **config**: update training parameters and model settings
+- **qlearningagent**: enhance training with checkpointing and score limit
+- expand paper outline on Flappy Bird reinforcement learning
+
 ## v0.6.0 (2024-12-30)
 
 ### Feat
