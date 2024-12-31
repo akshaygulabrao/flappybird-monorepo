@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "flappybird-monorepo"
-version = "v0.5.0"
+version = "v0.6.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
@@ -26,10 +26,7 @@ where = ["flappybird"]
 name = "cz_conventional_commits"
 tag_format = "v$version"
 version_scheme = "pep440"
-version = "0.6.0"
+version = "v0.6.0"
 update_changelog_on_bump = true
 major_version_zero = true
 bump_message = "chore(release): bump version to $version"
-post_bump_hooks = [
-    "sed -i '' 's/^version = \".*\"$/version = \"v$version\"/' pyproject.toml"
-]
