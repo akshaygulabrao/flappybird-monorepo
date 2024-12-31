@@ -60,6 +60,14 @@
 
 - added research in one repo
 
+## v0.6.0 (2024-12-30)
+
+### Feat
+
+- added logging to tensorboard
+- incorporated eval_policy into checkpoint
+- new callback for checking scores during eval
+
 ## v0.5.0 (2024-12-29)
 
 ### Feat
