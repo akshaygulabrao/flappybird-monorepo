@@ -10,10 +10,9 @@ import numpy as np
 import stable_baselines3 as sb3
 import yaml
 import flappy_bird_env
-from datetime import datetime
 from stable_baselines3.common.monitor import Monitor
 from stable_baselines3.common.evaluation import evaluate_policy
-from stable_baselines3.common.callbacks import EveryNTimesteps, BaseCallback
+from stable_baselines3.common.callbacks import EveryNTimesteps, BaseCallback, CheckpointCallback
 
 assert flappy_bird_env is not None, "flappy_bird_env is not installed"
 
@@ -21,10 +20,8 @@ with open("config/config.yaml", "r",encoding="utf-8") as file:
     config = yaml.safe_load(file)
 
 
-env = gym.make("FlappyBird-v0", use_lidar=False)
+env = gym.make("FlappyBird-v0", use_lidar=False,score_limit=1000)
 env = Monitor(env, "logs/")
-
-timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
 class ScoreCallback:
     def __init__(self):
@@ -58,6 +55,11 @@ else:
 
 event_callback = EveryNTimesteps(n_steps=100_000, callback=EvalPolicyCallback())
 
-model.learn(**config["training"], callback=event_callback,progress_bar=True,reset_num_timesteps=False)
+# Add a checkpoint callback
+checkpoint_callback = CheckpointCallback(save_freq=50000, save_path='checkpoints/',
+                                         name_prefix='data/dqn_flappybird_v0')
+
+model.learn(**config["training"], callback=[event_callback, checkpoint_callback], 
+            progress_bar=True, reset_num_timesteps=config["start_from_scratch"])
 
 model.save("data/dqn_flappybird_v0")
