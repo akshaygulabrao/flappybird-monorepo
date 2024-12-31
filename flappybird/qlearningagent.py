@@ -43,12 +43,12 @@ class EvalPolicyCallback(BaseCallback):
         self.logger.dump(step=self.num_timesteps)
         return True
 
-if config["start_from_scratch"]:
+if config["checkpoint_path"] is None:
     model = sb3.DQN(policy="MlpPolicy",
         env=env,
         **config["model"])
 else:
-    model = sb3.DQN.load("data/dqn_flappybird_v0", env=env)
+    model = sb3.DQN.load(config["checkpoint_path"], env=env)
 
 
 
@@ -56,10 +56,10 @@ else:
 event_callback = EveryNTimesteps(n_steps=100_000, callback=EvalPolicyCallback())
 
 # Add a checkpoint callback
-checkpoint_callback = CheckpointCallback(save_freq=50000, save_path='checkpoints/',
-                                         name_prefix='data/dqn_flappybird_v0')
+checkpoint_callback = CheckpointCallback(save_freq=100_000, save_path='data',
+                                         name_prefix='dqn_flappybird_v1')
 
 model.learn(**config["training"], callback=[event_callback, checkpoint_callback], 
-            progress_bar=True, reset_num_timesteps=config["start_from_scratch"])
+            progress_bar=True)
 
-model.save("data/dqn_flappybird_v0")
+model.save("data/dqn_flappybird_v1")

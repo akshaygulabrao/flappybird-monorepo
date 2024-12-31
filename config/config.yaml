@@ -1,5 +1,5 @@
 # Model Configuration
-start_from_scratch: false
+checkpoint_path: null
 
 model:
   train_freq: 1
@@ -11,6 +11,6 @@ model:
 
 # Training Configuration
 training:
-  total_timesteps: 500_000  # 10M steps
-  tb_log_name: "dqn_1"
-  reset_num_timesteps: false
+  total_timesteps: 30_000_000  # 30M steps
+  tb_log_name: "dqn_flappybird_v1"
+  reset_num_timesteps: true
