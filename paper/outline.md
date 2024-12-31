@@ -54,17 +54,42 @@ I use the DQN algorithm from stable-baselines3. The current implementation by st
 
 The original DQN algorithm comes from [Mnih et al. Playing Atari with Deep Reinforcement Learning, arxiv 2013](https://arxiv.org/abs/1312.5602). They use a CNN consisting of convolution-relu blocks connected to a final fully connected layer. The CNN then approximates
 $$
-Q(s,a) = 
+Q(s,a) \leftarrow 
 \begin{cases} 
 r & \text{ if } s' \text{ is terminal} \\
 r + \gamma \max_{a'} Q(s',a') & \text{otherwise}
 \end{cases}
 $$
-by sampling data from a replay buffer. They use MSE loss to train the network with stochastic gradient descent. Adam and Batch Normalization were not known at the time.
+or 
+$$
+Q(s,a) \leftarrow r + \gamma \max_{a'} Q(s',a')
+$$
+where Q(s',a') is 0 if the state is terminal.
 
-[Hasselt et al. Deep Reinforcement Learning with Double Q-learning, arxiv 2015](https://arxiv.org/abs/1509.06461) poitns out some problem with the original Q-Learning algorithm. The original Q-Learning algorithm suffers from overestimation bias. Hasselt et al. introduced the double Q-learning algorithm. The double Q-learning algorithm uses two networks to estimate the Q-value. One network is used to select the action, and the other network is used to evaluate the action. This reduces the overestimation bias.
+At each step, the CNN processes data from a replay buffer. They use MSE loss to train the network with stochastic gradient descent. 
 
-The current 
+[van Hasselt et al. Deep Reinforcement Learning with Double Q-learning, arxiv 2015](https://arxiv.org/abs/1509.06461) points out some problem with the original Q-Learning algorithm. The original Q-Learning algorithm suffers from overestimation bias. Hasselt et al. introduced the double Q-learning algorithm. The double Q-learning algorithm uses two networks to estimate the Q-value. One network is used to select the action, and the other network is used to evaluate the action. This reduces the overestimation bias. Effectively, they compute:
+
+$$
+Q_1(s,a) \leftarrow r + \gamma Q_1(s', \argmax_{a'} Q_2(s',a'))
+$$
+where:
+- $Q_1$ is the network used to select the action
+- $Q_2$ is the network used to evaluate the action
+
+Note that the paper uses a slightly more complex notation, generalizing Q and specifying that there are two sets of parameters instead.
+
+[van Hasselt et al. Dueling Network Architectures for Deep Reinforcement Learning, arxiv 2015](https://arxiv.org/abs/1511.06581) introduces the dueling network architecture. It splits the Q-value into two components:
+$$
+Q(s,a) = V(s) + A(s,a)
+$$
+where:
+- $V(s)$ is the value function
+- $A(s,a)$ is the advantage function
+
+This allows more efficient state representation and reduces the variance of the Q-value estimate.
+
+
 I originally used a simplified [64,64] multi-layer perceptron. I expected this to be insufficient and the performance to plateau. I set an over ambitious training step of 30 million. What surprised me was that the performance didn't stop plateauing long after I suspected it would. Setting the epsilon to $1 \times 10^{-4}$ statically instead of using epsilon-greedy exploration helped the agent more because the agent would play things safe by accounting for situations where flap or not flapping keeps it alive. The static $\epsilon$ helped the agent learn significantly faster. I suspect this to be an environment specific feature, where in other environments, the epsilon-greedy exploration would be more beneficial.
 ### PPO
 
@@ -125,5 +150,4 @@ I originally used a simplified [64,64] multi-layer perceptron. I expected this t
 - research implications
 
 ## Postmortem
-
-In hindsight, I should have started by replicating past work. I thought that looking at their code would be "cheating." I did not see that I was not adding anything new to the field by doing this. It would have been better to review all prior work and try to replicate it before I built my own QTable approach.
+One of my biggest mistakes was that I started by trying to reimplment my own QTable approach. This wasted lots of time and effort by trying to resolve problems that had already been solved in prior work. I thought that looking at their code would be "cheating." I did not see that I was not adding anything new to the field by doing this. It would have been better to review all prior work and try to replicate it before I built my own QTable approach.
