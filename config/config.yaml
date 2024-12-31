@@ -1,17 +1,15 @@
 # Model Configuration
+start_from_scratch: true
+
 model:
-  train_freq: 4
+  train_freq: 1
   gradient_steps: 1
   exploration_fraction: 0.1
-  exploration_final_eps: 0.01
+  exploration_final_eps: 0.0001
   tensorboard_log: "./logs/tensorboard/"
 
 # Training Configuration
 training:
-  total_timesteps: 10_000_000  # 10M steps
+  total_timesteps: 30_000_000  # 10M steps
+  tb_log_name: "dqn_0"
 
-# Evaluation Configuration
-evaluation:
-  eval_freq: 1_000_000       # Evaluate every 1M steps
-  n_eval_episodes: 100      # Number of episodes for evaluation
-  save_path: "./logs/best_model/"

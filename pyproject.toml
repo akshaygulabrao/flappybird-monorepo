@@ -9,17 +9,11 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "gymnasium>=1.0.0",
-    "ipykernel>=6.29.5",
     "numpy==1.26",
-    "pandas>=2.2.3",
-    "pre-commit>=4.0.1",
     "pygame>=2.6.1",
-    "pytest>=8.3.4",
-    "torch-tb-profiler>=0.4.3",
-    "torch>=2.5.1",
-    "tqdm>=4.67.1",
-    "wandb>=0.19.1",
+    "pyproject-toml>=0.1.0",
+    "pyyaml>=6.0.2",
+    "tensorboard>=2.18.0",
 ]
 
 
