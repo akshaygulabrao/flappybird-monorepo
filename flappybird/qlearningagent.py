@@ -13,7 +13,7 @@ import flappy_bird_env
 
 from stable_baselines3.common.monitor import Monitor
 from stable_baselines3.common.evaluation import evaluate_policy
-from stable_baselines3.common.callbacks import EvalCallback
+from stable_baselines3.common.callbacks import EveryNTimesteps, EventCallback, EvalCallback, BaseCallback
 import wandb
 
 assert flappy_bird_env is not None, "flappy_bird_env is not installed"
@@ -31,6 +31,15 @@ class ScoreCallback:
     def __call__(self, locals_dict, globals_dict):
         if locals_dict['dones'][0]:
             self.scores.append(locals_dict['infos'][0]['score'])
+            print(self.scores)
+        return True
+
+class EvalPolicyCallback(BaseCallback):
+    def __init__(self):
+        super().__init__()
+        self.scores = []
+    def _on_step(self) -> bool:
+        evaluate_policy(self.model, env, n_eval_episodes=3, deterministic=True, callback=score_callback)
         return True
 
 model = sb3.DQN(policy="MlpPolicy",
@@ -38,4 +47,10 @@ model = sb3.DQN(policy="MlpPolicy",
     **config["model"])
 
 score_callback = ScoreCallback()    
-print(evaluate_policy(model, env, n_eval_episodes=3, deterministic=True, callback=score_callback)) 
+a = EvalPolicyCallback()
+
+
+
+event_callback = EveryNTimesteps(n_steps=5_000, callback=a)
+
+model.learn(total_timesteps=10_000, callback=event_callback)
