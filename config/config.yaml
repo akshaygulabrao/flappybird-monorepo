@@ -1,15 +1,16 @@
 # Model Configuration
-start_from_scratch: true
+start_from_scratch: false
 
 model:
   train_freq: 1
   gradient_steps: 1
   exploration_fraction: 0.1
+  exploration_initial_eps: 0.0001
   exploration_final_eps: 0.0001
   tensorboard_log: "./logs/tensorboard/"
 
 # Training Configuration
 training:
-  total_timesteps: 30_000_000  # 10M steps
-  tb_log_name: "dqn_0"
-
+  total_timesteps: 500_000  # 10M steps
+  tb_log_name: "dqn_1"
+  reset_num_timesteps: false
