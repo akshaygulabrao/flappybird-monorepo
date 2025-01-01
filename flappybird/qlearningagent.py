@@ -59,7 +59,7 @@ event_callback = EveryNTimesteps(n_steps=100_000, callback=EvalPolicyCallback())
 checkpoint_callback = CheckpointCallback(save_freq=100_000, save_path='data',
                                          name_prefix='dqn_flappybird_v1')
 
-model.learn(**config["training"], callback=[event_callback, checkpoint_callback], 
+model.learn(**config["training"], callback=[event_callback, checkpoint_callback],
             progress_bar=True)
 
 model.save("data/dqn_flappybird_v1")

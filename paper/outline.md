@@ -30,7 +30,7 @@ I contribute:
 - RL environment exists at [flappy-bird-gymnasium](https://github.com/markub3327/flappy-bird-gymnasium)
 
 ### Flappy Bird Observation Space
-Due to computational constraints, I am using a simplified observation space. Current SOTA implementations learn directly from pixels. The observation space consists of 12 features: 
+Due to computational constraints, I am using a simplified observation space. Current SOTA implementations learn directly from pixels. The observation space consists of 12 features:
 1. The distance to pipe 0
 2. the top locattion of the bottom of pillar 1
 3. the top locattion of the top of pillar 1
@@ -65,13 +65,13 @@ Deep-Q Learning is a value-based methods. It computes the expected return of eac
 
 The original DQN algorithm comes from [Mnih et al. Playing Atari with Deep Reinforcement Learning, arxiv 2013](https://arxiv.org/abs/1312.5602). They use a CNN consisting of convolution-relu blocks connected to a final fully connected layer. The CNN then approximates
 $$
-Q(s,a) \leftarrow 
-\begin{cases} 
+Q(s,a) \leftarrow
+\begin{cases}
 r & \text{ if } s' \text{ is terminal} \\
 r + \gamma \max_{a'} Q(s',a') & \text{otherwise}
 \end{cases}
 $$
-or 
+or
 $$
 Q(s,a) \leftarrow r + \gamma \max_{a'} Q(s',a')
 $$
@@ -102,7 +102,7 @@ This allows more efficient state representation and reduces the variance of the 
 
 [Prioritized Experience Replay](https://arxiv.org/abs/1511.05952) introduces a replay buffer that samples data based on the temporal difference (TD) error. The TD-error is defined as the difference between the target and the predicted Q-value. The replay buffer samples data based on the TD-error. This allows the agent to focus on learning the most important experiences first instead of learning from all experiences with the same weight. Stable-baseline3 implements this, but is turned off by default.
 
-By default, the stable-baselines3 implementation uses the dueling network architecture with double Q-learning, duel-Q-learning, hindsight experience replay, and prioritized experience replay to augment the original DQN algorithm. 
+By default, the stable-baselines3 implementation uses the dueling network architecture with double Q-learning, duel-Q-learning, hindsight experience replay, and prioritized experience replay to augment the original DQN algorithm.
 
 
 I originally used a simplified [64,64] multi-layer perceptron. I expected this to be insufficient and the performance to plateau. I set an over ambitious training step of 30 million. What surprised me was that the performance didn't stop plateauing long after I suspected it would. Setting the epsilon to $1 \times 10^{-4}$ statically instead of using epsilon-greedy exploration helped the agent more because the agent would play things safe by accounting for situations where flap or not flapping keeps it alive. The static $\epsilon$ helped the agent learn significantly faster. I suspect this to be an environment specific feature, where in other environments, the epsilon-greedy exploration would be more beneficial. The agent got lucky sometimes and scored as high as 750 for some evaluation runs, but the average evaluation run score oscillated between 120 and 0. It's unclear why the agent's performance isn't more stable. Perhaps a policy based method would perform more efficiently. I am a bit hesistant to make any claims about the performance of DQN. Because I am not sure what is luck and what is due to the nature of the algorithm. Perhaps a policy based method would be easier to interpret. I think I'm going to call everything after the 1M epochs random luck. It seems to oscillate between 0 and 800, which is useless for all practical purposes.
@@ -117,12 +117,12 @@ I originally used a simplified [64,64] multi-layer perceptron. I expected this t
 ## Benchmarking Reinforcement Learning
 - Best achievable average score with a score limit of 1000.
 - Sample inefficiency does not count
-- How close does it get to handcrafted agent. 
+- How close does it get to handcrafted agent.
 
 ## Handcrafted evaluation function
 - I made a handcrafted evaluation function.
 - It gets approximately 900 on a training run of 10 runs with a score limit of 1000.
-- I can measure the success of the reinforcement learning agents utilizing how 
+- I can measure the success of the reinforcement learning agents utilizing how
 
 ## Simplified State Space
 - How well do the other benchmarks perform?

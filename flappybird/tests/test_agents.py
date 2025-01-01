@@ -38,7 +38,7 @@ def test_handcrafted_agent(normalize=True):
         None
 
     Returns:
-        None: Asserts that the average score is above 750. 
+        None: Asserts that the average score is above 750.
     """
     assert flappy_bird_gymnasium
     env = gymnasium.make(

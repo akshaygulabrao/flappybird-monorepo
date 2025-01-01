@@ -49,7 +49,7 @@ def handcrafted_agent(obs,normalize=True):
         x = obs[pipe *3]
         bot = obs[pipe * 3 + 2]
         top = obs[pipe * 3 + 1]
-   
+
         y_next = obs[-3] + (obs[-2]*10) / 512 # current y + current y_velocity
         y_next += 1/512 # 1 pixel acceleration per frame
         y_next += 24/512 # height of bird

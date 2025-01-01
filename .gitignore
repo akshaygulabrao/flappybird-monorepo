@@ -7,3 +7,6 @@ wandb/
 *zip
 logs/
 *svg
+*mp4
+videos/
+assets/
