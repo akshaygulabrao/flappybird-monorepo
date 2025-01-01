@@ -60,6 +60,15 @@
 
 - added research in one repo
 
+## v0.6.2 (2025-01-01)
+
+### Fix
+
+- multiple sections added to outline
+- **paper**: refine DQN section
+- **paper**: enhance outline on DQN and postmortem reflections
+- **qlearningagent**: update training configuration and checkpointing
+
 ## v0.6.1 (2024-12-31)
 
 ### Fix
