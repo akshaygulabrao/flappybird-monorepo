@@ -33,14 +33,13 @@ from enum import IntEnum
 from itertools import cycle
 from typing import Dict, Optional, Tuple, Union
 
+import constants
 import gymnasium
 import numpy as np
 import pygame
-
 import utils
-import constants
-from lidar import LIDAR
 from gymnasium.envs.registration import register
+from lidar import LIDAR
 
 register(
     id='FlappyBird-v0',

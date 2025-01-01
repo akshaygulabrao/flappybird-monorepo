@@ -1,9 +1,11 @@
 """Tests the handcrafted agent. Should score above 900 on average of 1000 runs."""
 
-import gymnasium
 import flappy_bird_gymnasium
+import gymnasium
 import tqdm
+
 from ..handcrafted_agent import handcrafted_agent
+
 
 def play(env,play_fn):
     """

@@ -1,15 +1,7 @@
 import numpy as np
 import pygame
-
-from constants import (
-    BASE_HEIGHT,
-    BASE_WIDTH,
-    PIPE_HEIGHT,
-    PIPE_WIDTH,
-    PLAYER_HEIGHT,
-    PLAYER_ROT_THR,
-    PLAYER_WIDTH,
-)
+from constants import (BASE_HEIGHT, BASE_WIDTH, PIPE_HEIGHT, PIPE_WIDTH,
+                       PLAYER_HEIGHT, PLAYER_ROT_THR, PLAYER_WIDTH)
 
 
 class LIDAR:

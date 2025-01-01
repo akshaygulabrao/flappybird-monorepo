@@ -70,8 +70,31 @@ Reinforcement learning techniques are roughly divided into two categories:
 - How well does my agent perform?
   * Parameters that impacted the performance of my agent
 
-## Pixels
-- Learning straight from pixels
+## DQN
+1. Rough idea from Mnih et al. 2013, but incorporates improvements
+2. Uses network architecture of [12, 64, 64, 2]
+3. Double DQN
+4. Dueling DQN
+5. Hindsight Experience Replay
+
+| Name | Mean Score (1000 runs) | Std Score (1000 runs) |
+|------|------------------------|-----------------------|
+| Handcrafted Agent | 1000.00 | 0.00 |
+| DQN| 20.82| 15.83 |
+
+### Results
+1. Original training run was 30M learning steps.
+2. Catastrophic forgetting around 1.2M learning steps, weird jumps in score after that.
+3. Random chance tweaked parameters to get 900 average score. `<Include tensorboard chart here>`
+
+## Ablation DQN
+1. DQN without double DQN
+2. DQN without dueling DQN
+3. DQN without hindsight experience replay
+4. DQN without double DQN and dueling DQN
+5. DQN without double DQN and hindsight experience replay
+6. DQN without dueling DQN and hindsight experience replay
+7. DQN without double DQN, dueling DQN, and hindsight experience replay
 
 ## Conclusion
 - Summary of findings

@@ -5,14 +5,16 @@ Uses stable-baseline3 DQN implementation. Uses wandb for logging. Used for bench
 improvement stops. Running 10 million episodes, and storing evaluation metrics every million
 episodes.
 """
+import flappy_bird_env
 import gymnasium as gym
 import numpy as np
 import stable_baselines3 as sb3
 import yaml
-import flappy_bird_env
-from stable_baselines3.common.monitor import Monitor
+from stable_baselines3.common.callbacks import (BaseCallback,
+                                                CheckpointCallback,
+                                                EveryNTimesteps)
 from stable_baselines3.common.evaluation import evaluate_policy
-from stable_baselines3.common.callbacks import EveryNTimesteps, BaseCallback, CheckpointCallback
+from stable_baselines3.common.monitor import Monitor
 
 assert flappy_bird_env is not None, "flappy_bird_env is not installed"
 

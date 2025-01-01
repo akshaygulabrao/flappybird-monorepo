@@ -4,11 +4,12 @@ The policy must be defined in the policy method and should return an action
 provided the state.
 """
 
-import gymnasium as gym
 import flappy_bird_env
+import gymnasium as gym
 import stable_baselines3
-from moviepy import VideoFileClip, concatenate_videoclips
 from base_agent import BaseAgent
+from moviepy import VideoFileClip, concatenate_videoclips
+
 
 class Agent(BaseAgent):
     def __init__(self, model_path):

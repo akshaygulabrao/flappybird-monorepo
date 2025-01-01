@@ -5,13 +5,14 @@ A list of defined models
 Output:
 Markdown pastable table with the performance of each model.
 """
+from pathlib import Path
+
 import numpy as np
 import stable_baselines3
+from base_agent import BaseAgent
+from handcrafted_agent import handcrafted_agent
 from tqdm import tqdm
 from weights2mp4 import create_environment, record_gameplay
-from handcrafted_agent import handcrafted_agent
-from base_agent import BaseAgent
-from pathlib import Path
 
 
 class Agent(BaseAgent):
