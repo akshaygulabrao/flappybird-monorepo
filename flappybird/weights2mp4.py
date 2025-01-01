@@ -8,24 +8,27 @@ import gymnasium as gym
 import flappy_bird_env
 import stable_baselines3
 from moviepy import VideoFileClip, concatenate_videoclips
+from base_agent import BaseAgent
 
-def load_model(model_path):
-    return stable_baselines3.DQN.load(model_path)
+class Agent(BaseAgent):
+    def __init__(self, model_path):
+        self.model = stable_baselines3.DQN.load(model_path)
 
-def decide_action(model, obs):
-    return model.predict(obs, deterministic=True)
+    def decide(self, obs):
+        return int(self.model.predict(obs, deterministic=True)[0])
 
-def create_environment():
-    return gym.make("FlappyBird-v0", use_lidar=False, render_mode="rgb_array", audio_on=True, score_limit=1000)
+def create_environment(render_mode=None):
+    return gym.make("FlappyBird-v0", use_lidar=False, render_mode=render_mode, audio_on=True, score_limit=1000)
 
-def record_gameplay(env, model):
+def record_gameplay(env, decision_function):
     obs, info = env.reset()
     while True:
-        action = int(decide_action(model, obs)[0])
+        action = decision_function(obs)
         obs, reward, done, truncated, info = env.step(action)
         if done or truncated:
             break
     env.close()
+    return info['score']
 
 def process_video(input_path, output_path):
     try:
@@ -47,12 +50,12 @@ def main():
     input_video = f"{video_folder}/rl-video-episode-0.mp4"
     output_video = f"{video_folder}/output_video.mp4"
 
-    model = load_model(model_path)
-    env = create_environment()
-    env = gym.wrappers.RecordVideo(env, video_folder=video_folder, episode_trigger=lambda episode_id: True)
+    agent = Agent(model_path)
+    env = create_environment(render_mode="rgb_array")
+    # env = gym.wrappers.RecordVideo(env, video_folder=video_folder, episode_trigger=lambda episode_id: True)
 
-    record_gameplay(env, model)
-    process_video(input_video, output_video)
+    record_gameplay(env, agent.decide)
+    # process_video(input_video, output_video)
 
 if __name__ == "__main__":
     main()
