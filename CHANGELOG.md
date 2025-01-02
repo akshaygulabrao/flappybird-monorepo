@@ -60,6 +60,18 @@
 
 - added research in one repo
 
+## v0.7.1 (2025-01-01)
+
+### Fix
+
+- qol changes for outline - weights2mp4 loads DQN Agent by default instead of handcrafted agent - dqn_versions maps my numeric versions to quality attributes of each version - outline.md corrects misinformation about the replay buffer
+- renamed config to dqn_v1
+- resolve merge
+
+### Refactor
+
+- agents.py contains all agents
+
 ## v0.7.0 (2025-01-01)
 
 ### Feat
