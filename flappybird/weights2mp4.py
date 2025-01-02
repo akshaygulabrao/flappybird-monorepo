@@ -1,7 +1,8 @@
 """
 This script takes in a policy and outputs a video of the agent playing the game.
 The policy must be defined in the policy method and should return an action
-provided the state.
+provided the state. I thought about making this a script with command line arguments,
+but I think it's easier to just edit the code.
 """
 
 import glob
@@ -12,7 +13,7 @@ from pathlib import Path
 import flappy_bird_env
 import gymnasium as gym
 import stable_baselines3
-from agents import BaseAgent, DQNAgent, HandcraftedAgent
+from agents import DQNAgent, HandcraftedAgent
 from moviepy import VideoFileClip, concatenate_videoclips
 
 
@@ -49,12 +50,13 @@ def get_latest_video_file(folder, pattern):
         raise FileNotFoundError("No video files found.")
     return max(files, key=os.path.getctime)
 
-def main(model_path="data/dqn_flappybird_v1_1300000_steps.zip", video_folder="videos"):
-    weights_file_name = Path(model_path).stem
+def main(video_folder="videos"):
     timestamp = time.strftime("%Y%m%d-%H%M%S")
-    output_video = f"{video_folder}/{weights_file_name}_{timestamp}.mp4"
 
-    agent = DQNAgent(model_path)
+    agent = HandcraftedAgent()
+    weights_file_name = agent.name
+
+    output_video = f"{video_folder}/{weights_file_name}_{timestamp}.mp4"
     env = create_environment(render_mode="rgb_array")
     env = gym.wrappers.RecordVideo(
         env,
@@ -64,8 +66,8 @@ def main(model_path="data/dqn_flappybird_v1_1300000_steps.zip", video_folder="vi
     )
 
     try:
-        input_video = get_latest_video_file(video_folder, f"{weights_file_name}*")
         record_gameplay(env, agent.decide)
+        input_video = get_latest_video_file(video_folder, f"{weights_file_name}*")
         process_video(input_video, output_video)
     except FileNotFoundError as e:
         print(f"Error: {e}")

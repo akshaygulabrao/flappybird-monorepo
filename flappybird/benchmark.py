@@ -9,25 +9,10 @@ from pathlib import Path
 
 import numpy as np
 import stable_baselines3
-from agents import BaseAgent
-from handcrafted_agent import handcrafted_agent
+from agents import DQNAgent, HandcraftedAgent
 from tqdm import tqdm
 from weights2mp4 import create_environment, record_gameplay
 
-
-class Agent(BaseAgent):
-    def __init__(self, name:str, model_path:Path):
-        self.name = name
-        self.model = stable_baselines3.DQN.load(model_path)
-
-    def decide(self, obs):
-        return int(self.model.predict(obs, deterministic=True)[0])
-
-class HandCraftedAgent(BaseAgent):
-    def __init__(self,name:str):
-        self.name = name
-    def decide(self, obs):
-        return handcrafted_agent(obs)
 
 def evaluate_agent(agent):
     env = create_environment(render_mode=None)
@@ -49,8 +34,8 @@ def print_markdown_table(evals):
 
 # Evaluate agents
 evals = []
-model0 = HandCraftedAgent("Handcrafted Agent")
-model1 = Agent("DQN", Path("data/dqn_flappybird_v1_21700000_steps.zip"))
+model0 = HandcraftedAgent()
+model1 = DQNAgent(Path("data/dqn_flappybird_v1_21700000_steps.zip"))
 
 evals.append(evaluate_agent(model0))
 evals.append(evaluate_agent(model1))
