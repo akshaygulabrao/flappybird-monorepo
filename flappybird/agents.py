@@ -8,10 +8,13 @@ class BaseAgent:
         raise NotImplementedError("Subclass must implement decide method")
 
 class HandcraftedAgent(BaseAgent):
+<<<<<<< HEAD
     def __init__(self, normalize:bool=True):
         self.normalize = normalize
         self.name = "handcrafted"
 
+=======
+>>>>>>> 16a0cff (refactor: agents.py contains all agents)
     def decide(self, obs):
         if not self.normalize:
             pipe = 0
@@ -47,7 +50,10 @@ class HandcraftedAgent(BaseAgent):
 class DQNAgent(BaseAgent):
     def __init__(self, model_path:Path):
         self.model = stable_baselines3.DQN.load(model_path)
+<<<<<<< HEAD
         self.name = model_path.stem
+=======
+>>>>>>> 16a0cff (refactor: agents.py contains all agents)
 
     def decide(self, obs):
         return int(self.model.predict(obs, deterministic=True)[0])
