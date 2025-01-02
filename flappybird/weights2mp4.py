@@ -53,7 +53,7 @@ def get_latest_video_file(folder, pattern):
 def main(video_folder="videos"):
     timestamp = time.strftime("%Y%m%d-%H%M%S")
 
-    agent = HandcraftedAgent()
+    agent = DQNAgent(Path("data/dqn_flappybird_v1_1300000_steps.zip"))
     weights_file_name = agent.name
 
     output_video = f"{video_folder}/{weights_file_name}_{timestamp}.mp4"
