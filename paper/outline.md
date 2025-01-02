@@ -8,11 +8,12 @@
 
 - **Contributions:**
   - Development of a high-performing handcrafted agent.
-  - Benchmarking of DQN and PPO algorithms.
   - Analysis of network complexity versus performance.
 
 - **Methodology Rationale:**
   - Opt for non-pixel-based learning to explore diverse model types beyond CNNs.
+
+There are lots of interesting ways to extend this project, but I have to start focusing on communicating my findings instead of more discovery.
 
 ## Related Work
 
@@ -34,6 +35,8 @@
 8. [foodsung. DRL-FlappyBird, Github, 2016](https://github.com/foodsung/DRL-FlappyBird)
  - Inspired by yenchenlin. Provides an even more mature implementation.
 
+A winning state for this project is finding a perfect scoring bot for significantly less memory than a q-table for every state.
+
 ## Flappy Bird
 - Mobile game from 2013 that went viral
 - Game mechanics
@@ -44,7 +47,6 @@
 ## Reinforcement Learning Techniques
 Reinforcement learning techniques are roughly divided into two categories:
 1. Value-based methods
-2. Policy-based methods
 
 ### Value-based methods
 1. Implicitly assume optimal action is not a mixed strategy.
@@ -78,7 +80,7 @@ Reinforcement learning techniques are roughly divided into two categories:
 
 | Name | Mean Score (1000 runs) | Std Score (1000 runs) |
 |------|------------------------|-----------------------|
-| Handcrafted Agent | 1000.00 | 0.00 |
+| Handcrafted Agent | `<mean>` | `<std>` |
 | dqn_flappybird_v1_1300000_steps | 20.82| 15.83 |
 
 Note: Change the v1 to be more descriptive. Only supposed to be identified by me right now.
@@ -88,12 +90,18 @@ Note: Change the v1 to be more descriptive. Only supposed to be identified by me
 2. Catastrophic forgetting around 1.2M learning steps, weird jumps in score after that.
 3. Random chance tweaked parameters to get 900 average score. `<Include tensorboard chart here>`
 
-## Ablation DQN
+### Ablation DQN
 Cartesian product of all possible combinations of the following:
 1. Double DQN
 2. Dueling DQN
 3. {Prioritized Experience Replay, Hindsight Experience Replay}
 
+### Further Work
+- Learn directly from pixels
+- Experiment with transformer models
+- Experiment with Partially Observable Environments
+- Try Hindsight Experience Replay
+- Try Policy-based methods
 
 ## Conclusion
 - Summary of findings
