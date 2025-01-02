@@ -60,6 +60,20 @@
 
 - added research in one repo
 
+## v0.7.0 (2025-01-01)
+
+### Feat
+
+- made weights2py more useful
+- benchmark runs benchmarking tests for you
+- visualize policy with video
+
+### Fix
+
+- added auto-naming timestamps to weights2mp4
+- plan for DQN
+- move outline paragraphs to paper
+
 ## v0.6.2 (2025-01-01)
 
 ### Fix
