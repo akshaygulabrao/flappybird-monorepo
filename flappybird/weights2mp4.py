@@ -5,6 +5,7 @@ provided the state. I thought about making this a script with command line argum
 but I think it's easier to just edit the code.
 """
 
+import argparse
 import glob
 import os
 import time
@@ -16,7 +17,9 @@ import stable_baselines3
 from agents import DQNAgent, HandcraftedAgent
 from moviepy import VideoFileClip, concatenate_videoclips
 
-
+parser = argparse.ArgumentParser(description="weight model to generate")
+parser.add_argument("config", help="path to config file (yaml)")
+args = parser.parse_args()
 def create_environment(render_mode=None):
     return gym.make("FlappyBird-v0", use_lidar=False, render_mode=render_mode, audio_on=True, score_limit=1000)
 
@@ -53,7 +56,7 @@ def get_latest_video_file(folder, pattern):
 def main(video_folder="videos"):
     timestamp = time.strftime("%Y%m%d-%H%M%S")
 
-    agent = DQNAgent(Path("data/dqn_flappybird_v1_1300000_steps.zip"))
+    agent = DQNAgent(Path("data/dqn_flappybird_v2.zip"))
     weights_file_name = agent.name
 
     output_video = f"{video_folder}/{weights_file_name}_{timestamp}.mp4"

@@ -60,6 +60,18 @@
 
 - added research in one repo
 
+## v0.8.0 (2025-01-03)
+
+### Feat
+
+- finished experiment 2
+- add net arch details in paper/dqn-versions
+
+### Fix
+
+- modified slides
+- updating README
+
 ## v0.7.1 (2025-01-01)
 
 ### Fix

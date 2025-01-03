@@ -81,7 +81,8 @@ Reinforcement learning techniques are roughly divided into two categories:
 | Name | Mean Score (1000 runs) | Std Score (1000 runs) |
 |------|------------------------|-----------------------|
 | Handcrafted Agent | `<mean>` | `<std>` |
-| dqn_flappybird_v1_1300000_steps | 20.82| 15.83 |
+| dqn_flappybird_v1_1.3M_steps | 20.82| 15.83 |
+| dqn_flappybird_v2_2M_steps | 121.43 | 142.98 |
 
 Note: Change the v1 to be more descriptive. Only supposed to be identified by me right now.
 
