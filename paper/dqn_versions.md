@@ -10,6 +10,10 @@
     - prioritized_replay False
     - target_network_update_freq 10K
     - Double DQN & Dueling DQN
+2. Network architecture:
+    - [12, 64, 64, 2]
+    - ReLU
+    - Adam
 
 - 1.3M steps
 - 20.82 mean score
