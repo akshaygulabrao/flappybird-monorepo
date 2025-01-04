@@ -1,5 +1,5 @@
-name: &name dqn_flappybird_v2
-checkpoint_path: *name
+name: &name dqn_flappybird_v3
+checkpoint_path: null
 
 env:
   id: FlappyBird-v0
@@ -16,7 +16,7 @@ model:
   exploration_final_eps: 0.0001
   tensorboard_log: "./logs/tensorboard/"
   policy_kwargs:
-    net_arch: [64, 64, 64]
+    net_arch: [64, 64, 64, 64]
 
 training:
   total_timesteps: 5_000_000  # 30M steps
