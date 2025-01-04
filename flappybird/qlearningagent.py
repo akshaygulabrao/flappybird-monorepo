@@ -6,36 +6,28 @@ improvement stops. Running 10 million episodes, and storing evaluation metrics e
 episodes.
 """
 
+import argparse
 import os
+from typing import Any, Optional, Union
 
 import flappy_bird_env
 import gymnasium as gym
 import numpy as np
 import stable_baselines3 as sb3
 import yaml
+from stable_baselines3.common.buffers import ReplayBuffer
 from stable_baselines3.common.callbacks import (BaseCallback,
                                                 CheckpointCallback,
                                                 EveryNTimesteps)
 from stable_baselines3.common.evaluation import evaluate_policy
 from stable_baselines3.common.monitor import Monitor
+from stable_baselines3.common.type_aliases import (DictReplayBufferSamples,
+                                                   DictRolloutBufferSamples,
+                                                   ReplayBufferSamples,
+                                                   RolloutBufferSamples)
+from stable_baselines3.common.vec_env import VecNormalize
 
 assert flappy_bird_env is not None, "flappy_bird_env is not installed"
-
-import argparse
-
-parser = argparse.ArgumentParser(description="DQN configuration")
-
-
-parser.add_argument("config", help="path to config file (yaml)")
-args = parser.parse_args()
-
-
-with open(args.config, "r", encoding="utf-8") as file:
-    config = yaml.safe_load(file)
-
-
-env = gym.make(**config["env"])
-env = Monitor(env, "logs/")
 
 
 class ScoreCallback:
@@ -49,14 +41,14 @@ class ScoreCallback:
 
 
 class EvalPolicyCallback(BaseCallback):
-    def __init__(self):
+    def __init__(self, env):
         super().__init__()
-
+        self.env = env
     def _on_step(self) -> bool:
         self.score_callback = ScoreCallback()
         evaluate_policy(
             self.model,
-            env,
+            self.env,
             n_eval_episodes=100,
             deterministic=True,
             callback=self.score_callback,
@@ -68,27 +60,51 @@ class EvalPolicyCallback(BaseCallback):
         return True
 
 
-if config["checkpoint_path"] is None:
-    model = sb3.DQN("MlpPolicy", env,**config["model"])
+class PrioritizedExperienceReplayBuffer(ReplayBuffer):
+    def __init__(self, buffer_size, alpha=0.6, beta=0.4, epsilon=1e-6, **kwargs):
+        super().__init__(buffer_size, **kwargs)
+        self.alpha = alpha
+        self.beta = beta
+    def __add__():
+        pass
 
-else:
-    checkpoint_path = f"data/{config['name']}.zip"
-    if os.path.exists(checkpoint_path):
-        model = sb3.DQN.load(checkpoint_path, env=env)
+    def sample(self, batch_size: int, env: Optional[VecNormalize] = None) -> ReplayBufferSamples:
+        pass
+    def _maybe_cast_dtype(dtype: np.typing.DTypeLike) -> np.typing.DTypeLike:
+        pass
+
+def main():
+    parser = argparse.ArgumentParser(description="DQN configuration")
+    parser.add_argument("config", help="path to config file (yaml)")
+    args = parser.parse_args()
+
+    with open(args.config, "r", encoding="utf-8") as file:
+        config = yaml.safe_load(file)
+
+    env = gym.make(**config["env"])
+    env = Monitor(env, "logs/")
+
+    if config["checkpoint_path"] is None:
+        model = sb3.DQN(**config["model"], env=env)
     else:
-        print("Checkpoint file not found")
-        exit(1)
+        checkpoint_path = f"data/{config['name']}.zip"
+        if os.path.exists(checkpoint_path):
+            model = sb3.DQN.load(checkpoint_path, env=env)
+        else:
+            print("Checkpoint file not found")
+            exit(1)
+
+    event_callback = EveryNTimesteps(n_steps=100_000, callback=EvalPolicyCallback(env))
+    checkpoint_callback = CheckpointCallback(**config["checkpoint"])
+
+    model.learn(
+        **config["training"],
+        callback=[event_callback, checkpoint_callback],
+        progress_bar=True,
+    )
+
+    model.save(f"data/{config['name']}.zip")
 
 
-event_callback = EveryNTimesteps(n_steps=100_000, callback=EvalPolicyCallback())
-
-# Add a checkpoint callback
-checkpoint_callback = CheckpointCallback(**config["checkpoint"])
-
-model.learn(
-    **config["training"],
-    callback=[event_callback, checkpoint_callback],
-    progress_bar=True,
-)
-
-model.save(f"data/{config['name']}.zip")
+if __name__ == "__main__":
+    main()
