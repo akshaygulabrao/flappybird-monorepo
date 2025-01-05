@@ -60,6 +60,22 @@
 
 - added research in one repo
 
+## v0.9.0 (2025-01-05)
+
+### Feat
+
+- accidentally ended up with a good idea
+- added versions of extra experiments
+
+### Fix
+
+- started implementing small prioritized replay buffer
+- started implementing prioritized_experience_replay
+- outline for presentation
+- built prioritized experience replay class
+- started implementing replay buffer
+- Finished experiment 2
+
 ## v0.8.0 (2025-01-03)
 
 ### Feat
