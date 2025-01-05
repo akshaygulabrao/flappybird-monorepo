@@ -16,17 +16,13 @@ import numpy as np
 import stable_baselines3 as sb3
 import yaml
 from gymnasium import spaces
+from prioritized_experience_replay import PrioritizedReplayBuffer
 from stable_baselines3.common.buffers import ReplayBuffer
 from stable_baselines3.common.callbacks import (BaseCallback,
                                                 CheckpointCallback,
                                                 EveryNTimesteps)
 from stable_baselines3.common.evaluation import evaluate_policy
 from stable_baselines3.common.monitor import Monitor
-from stable_baselines3.common.type_aliases import (DictReplayBufferSamples,
-                                                   DictRolloutBufferSamples,
-                                                   ReplayBufferSamples,
-                                                   RolloutBufferSamples)
-from stable_baselines3.common.vec_env import VecNormalize
 
 assert flappy_bird_env is not None, "flappy_bird_env is not installed"
 
@@ -59,38 +55,6 @@ class EvalPolicyCallback(BaseCallback):
         self.logger.record("eval/std_score", np.std(scores))
         self.logger.dump(step=self.num_timesteps)
         return True
-
-
-class PrioritizedReplayBuffer(ReplayBuffer):
-    def __init__(self, buffer_size, alpha=0.6, beta=0.4,observation_space=spaces.Box(0,1,(12,)),action_space=spaces.Discrete(2),**kwargs):
-        super().__init__(buffer_size,observation_space=observation_space,action_space=action_space,**kwargs)
-        self.alpha = alpha  # Priority exponent
-        self.beta = beta    # Importance sampling exponent
-        self.priorities = np.zeros(buffer_size, dtype=np.float32)
-        self.max_priority = 1.0  # Initial priority for new experiences
-
-    def add(        self,
-        obs: np.ndarray,
-        next_obs: np.ndarray,
-        action: np.ndarray,
-        reward: np.ndarray,
-        done: np.ndarray,
-        infos: List[Dict[str, Any]],
-        ):
-        super().add(obs,next_obs,action,reward, done,infos)
-        self.priorities[self.pos] = self.max_priority  # Assign max priority to new experiences
-        # Update position and check if buffer is full
-        self.pos = (self.pos + 1) % self.buffer_size
-        if self.pos == 0:
-            self.full = True
-    def sample(self, batch_size,env):
-        # Compute sampling probabilities
-        return super().sample(batch_size,env)
-
-    def update_priorities(self, indices, priorities):
-        # Update priorities for sampled experiences
-        self.priorities[indices] = priorities
-        self.max_priority = max(self.max_priority, priorities.max())
 
 def main():
     parser = argparse.ArgumentParser(description="DQN configuration")
