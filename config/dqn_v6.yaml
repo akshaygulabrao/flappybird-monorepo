@@ -17,7 +17,7 @@ model:
   tensorboard_log: "./logs/tensorboard/"
   policy_kwargs:
     net_arch: [64, 64]
-
+  buffer_size: 100
 training:
   total_timesteps: 5_000  # 30M steps
   tb_log_name: *name
