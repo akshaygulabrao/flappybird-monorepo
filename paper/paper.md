@@ -1,13 +1,16 @@
-# Reinforcement Learning Techniques in Flappy Bird
-Reinforcement learning allows the systematic search of solutions in a problem space. They allow the discover of solutions to problems that are counterintuitive to humans. Reinforcement learning has been the foundation of breakthroughs in go, chess, and protein folding [^1][^2][^3]. This paper provides a bottom-up approach to reinforcement learning by implementing an agent that plays Flappy Bird[^4]. Flappy bird is a simple mobile game from 2015. It is an excellent environment for reinforcement learning because of its simple game mechanics and discrete action space. Here the state space iteratively becomes more sophisticated, and I use different function approximation algorithms to address this
+# Stability Issues with DQN
+Reinforcement learning allows the systematic search of solutions in a problem space. They allow the discovery of solutions to problems that are counterintuitive to humans. Reinforcement learning has been the foundation of breakthroughs in go, chess, and protein folding [^1][^2][^3].
 
-I progress through three stages:
-1. A minimal implementation using a handcrafted binary state space
-2. An intermediate approach using a simplified observation space
-3. A full implementation learning directly from pixel data
+There is no novel research in this paper. Instead, I expand on / distill the following:
+- Introduction to Reinforcement Learning
+- Introduction to Value-based Methods
+- Introduction to Deep Q-Learning
+- Flappy Bird Example
+- Stability Issues with DQN
+
 
 ## Introduction to Reinforcement Learning
-In reinforcement learning, an agent lives in an environment specified by an event loop. The agent must observe the relationship between its actions and the environment's response. The environment's response consists of two things: (1) a reward signal, and (2) a new state.
+In reinforcement learning, an agent lives in an environment specified by an event loop. The agent must observe the relationship between its actions and the environment's response. The environment's response consists of two things: (1) a reward signal, and (2) a new state. The agent's goal is to maximize the numerical reward signal given by the environment.
 
 ``` python
 observation = env.get_initial_state()
