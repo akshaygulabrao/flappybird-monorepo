@@ -93,6 +93,7 @@ The Dueling DQN improves the efficiency of the network approximation by separati
   - evident in all prior work
 - Mnih et al. 2013,
   - obscures this by choosing optimistic charts
+    - probably took multiple attempts
   - arbitrary q-value chart to show "stability"
 - No other prior work shows catastrophic forgetting
   - Including this chart makes the research look less valuable
