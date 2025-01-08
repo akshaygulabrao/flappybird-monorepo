@@ -177,3 +177,4 @@ allows robots to learn from sequential decision making
 - First step should have been to replicate the work of others
 - Had trouble with deciding when to stop
     - Always more interesting questions, but deadlines exist
+- Update results on a time-based schedule instead of a milestone-based one

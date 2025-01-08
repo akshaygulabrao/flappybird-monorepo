@@ -1,92 +1,19 @@
-## 0.4.1 (2024-12-29)
-
-### Fix
-
-- use config.yaml file for qlearningagent.py
-
-## 0.4.0 (2024-12-29)
+## v0.10.0 (2025-01-07)
 
 ### Feat
 
-- use stable_baselines3 for DQN implementation
-
-### Fix
-
-- integrated env w torchrl
-
-## 0.3.1 (2024-12-28)
-
-### Fix
-
-- Introduce qnetwork_testing.py and transition from torch to torchrl
-
-## 0.3.0 (2024-12-28)
-
-### Feat
-
-- **qlearning-agent**: enhance QLearningAgent with Weights & Biases integration and action selection improvements
-
-## 0.2.0 (2024-12-28)
-
-### Feat
-
-- **qlearning-agent**: add QLearningAgent class for training and testing in FlappyBird environment
-
-### Refactor
-
-- add configuration and new agents for Flappy Bird
-
-## 0.1.1 (2024-12-28)
-
-### Fix
-
-- removed qtable work
-- **qtable**: fixed bug with pandas serialization
-
-### Refactor
-
-- **qtable_agent**: removes packaging code
-
-## 0.1.0 (2024-12-28)
-
-### Feat
-
-- Q-Table implemented and can pass one pipe
-- used binomial dist. for epsilon greedy
-- Eligibility traces for credit assignment
-- Off-policy Q-Learning
-
-### Fix
-
-- added research in one repo
-
-## v0.9.0 (2025-01-05)
-
-### Feat
-
+- using marp to export markdown to powerpoint
 - accidentally ended up with a good idea
 - added versions of extra experiments
 
 ### Fix
 
-- started implementing small prioritized replay buffer
-- started implementing prioritized_experience_replay
-- outline for presentation
-- built prioritized experience replay class
-- started implementing replay buffer
 - Finished experiment 2
-
-## v0.8.0 (2025-01-03)
-
-### Feat
-
-- finished experiment 2
-- add net arch details in paper/dqn-versions
-
-### Fix
-
-- modified slides
 - updating README
+
+### Refactor
+
+- consolidate career summary and enhance content structure
 
 ## v0.7.1 (2025-01-01)
 

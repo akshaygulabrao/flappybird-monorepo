@@ -1,10 +1,7 @@
 # Flappy Bird with Q-Learning
 
 ## Introduction
-Reinforcement learning
-- heuristic search of sequential decision making
-- discover solutions counterintuitive to humans
-- foundation of breakthroughs in go, chess, and protein folding
+Reinforcement learning is the systematized approach of learning from sequential decisions. It allows the discovery of solutions that are counterintuitive to humans. It is the foundation of breakthroughs in go, chess, and protein folding.
 
 **Contributions:**
 - Attempted to reproduce prior work
@@ -107,7 +104,7 @@ Before Q-Learning Networks:
 | handcrafted agent | **954** | **170** |
 
 ### Stability of Learning
-`chart that shows catastrophic forgetting`
+![dqn_scores](./paper/dqn_scores.png)
 - Catastrophic forgetting
   - evident in all prior work
 - Mnih et al. 2013,
@@ -126,12 +123,15 @@ Before Q-Learning Networks:
 - Duplicated neurons with different learning rates
 
 ## Conclusion
-- Summary of findings
-- Comparative analysis
-- future work
-- research implications
+- Stable-baselines3 is a powerful tool for reinforcement learning
+- Prior work heavily overstates the stability of learning
+- Catastrophic forgetting is a common problem
+  - function approximation with dynamic environments
 
 ## Postmortem
 - should have started with replicating prior work
 - had trouble deciding when to stop
+  - interesting follow-up questions
   - deadlines exist
+- update results differently
+  - time-based instead of milestone-based
