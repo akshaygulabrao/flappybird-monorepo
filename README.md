@@ -1,58 +1,41 @@
 # Flappy Bird with Q-Learning
 
 ## Introduction
-Reinforcement learning is the systematized approach of learning from sequential decisions. It allows the discovery of solutions that are counterintuitive to humans. It is the foundation of breakthroughs in go, chess, and protein folding.
+Reinforcement learning is the systematized approach of learning from sequential decisions. Agents iteratively learn from the environment's response to actions, which consists of the state update and a numerical reward signal. It allows the discovery of solutions that are counterintuitive to humans. It is the foundation of breakthroughs in go, chess, and protein folding.
 
-**Contributions:**
-- Attempted to reproduce prior work
-- Had issues with stability of learning
+In this repository, I replicate prior work on the flappy bird game. I technically was successful, but had significant issues with the stability of learning. Upon further reflection, I noticed that all prior work also had significant issues with the stability of learning, but avoided showing this problem through clever display tricks, or chart omission.
 
 ## Background
 
-### Reinforcement Learning
-1. Framework for sequential decision making
-2. Agent learns by observing environment's response to actions
-3. Goal is to maximize the reward signal given by the environment
-  - It's a numerical value
-  - Good reward signals are consistent and achievable
-  - Accurately represent the difference between optimal and suboptimal actions
-
 ### Markov Decision Processes
-1. Formal name for sequential decision making
-2. 4 components of an MDP
-  - State space $\mathcal{S}$
-  - Action space $\mathcal{A}$
-  - Transition function $P(s'|s,a) \rightarrow [0,1]$
-  - Reward function $R(s,a) \rightarrow \mathbb{R}$
-3. Each interaction with the environment is known as a trajectory
+Reinforcement learning is a framework for learning from sequential decisions. Markov Decision Processes (MDPs) formalize this process.
+MDPs consist of two sets and two functions:
+- State space $\mathcal{S}$
+- Action space $\mathcal{A}$
+- Transition function $P(s'|s,a) \rightarrow [0,1]$
+- Reward function $R(s,a) \rightarrow \mathbb{R}$
 
-### Types of Reinforcement Learning
-1. There are two dimensions along which RL algorithms can be classified:
-  - Known/Unknown environment dynamics
-  - Learn expected return of each state-action
-  - Most optimal action distribution for each state
-2. Model-Based RL vs Model-Free RL
-  - Sometimes the next state is deterministic wrt action
-    - Map the optimal action to each state
-  - The next state is uncertain
-    - Learn the state transition function
-3. Value-based RL vs Policy-based RL
-  - Value-based: Learn the value function for each state-action
-    - The optimal policy is then trivial
-    - Exploration strategy is a hyperparameter
-  - Policy-based: Learn the optimal action distribution for each state
-    - Exploration strategy is baked into the policy
-    - More stable
+An agent's interaction with their environment is defined by a trajectory. A trajectory is a sequence of states, actions, and rewards.
+
+$S_0, A_0, R_1, S_1, A_1, R_2, \ldots, S_T$
+
+The agent's goal is to learn a policy $\pi(s) \rightarrow a$ that maximizes the reward signal. The reward signal isn't given by the reward received during a single timestep, but rather the sum of rewards received over the entire trajectory. When making a decision, the agent must consider the future rewards it can expect to receive, but discount them by a factor of $\gamma \in [0,1]$ because they are less certain. $\gamma$ close to 1 makes the agent more forward-looking into the future. $\gamma$ close to 0 makes the agent look for immediate rewards. In most reinforcement learning problems, $\gamma$ is set to 0.99. With calculus, even if t approaches infinity, the sum of rewards is finite.
+
+$$ \sum_{t=0}^{\infty} \gamma^t r_{t+1} = \frac{r_1}{1-\gamma} $$
+
+When the environment dynamics, $P(s'|s,a)$, are known, the agent can use dynamic programming to solve the MDP. It can walk backwards from the terminal state to the initial state, and calculate the value of each state-action pair.If environment dynamics is unknown, the agent can use reinforcement learning to learn the best action for each state.
+
+### Two Learning Paradigms of Reinforcement Learning
+The agent has two approaches for learning the best action for each state: (1) Learning the expected return of each state-action pair or (2) learning the optimal action distribution for each state.
+
+#### Value-based Reinforcement Learning
+Learning the expected return of each state-action pair is faster, but needs a hardcoded exploration strategy, which needs to be tuned for each environment. For example, using a learning rate of .1 causes the agent to learn absolutely nothing in the flappy bird environment because the optimal action distribution is to jump about 1/20 of the time.
+
+#### Policy-based Reinforcement Learning
+Learning the optimal action distribution for each state is more stable, because it naturally systematically explores the environment. Learning action distributions also naturally expand to deal with continuous action spaces.
 
 ### Deep Q Learning
-Before Q-Learning Networks:
-- Q-Tables: learn the value of each state-action pair
-  - Suffer from the curse of dimensionality
-  - Manual feature engineering to compress the state space
-- Q-Learning Networks
-  - Learn the value of each state-action pair
-  - Automates feature engineering
-  - Networks were deep for their time
+Q-Learning is the value-based policy-free approach to reinforcement learning. The agent needs to learn a function $S \times A \rightarrow \mathbb{R}$ that approximates the expected return of each state-action pair. Classical approaches for this problem is to use a Q-Table, which stores the value of each state-action pair in a table.
 
 
 ## Related Work
