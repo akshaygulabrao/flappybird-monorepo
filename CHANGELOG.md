@@ -1,3 +1,13 @@
+## v0.11.0 (2025-01-07)
+
+### Feat
+
+- finished README and PPT
+
+### Refactor
+
+- revise README for clarity and depth on reinforcement learning concepts
+
 ## v0.10.0 (2025-01-07)
 
 ### Feat
