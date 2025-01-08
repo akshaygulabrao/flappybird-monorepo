@@ -1,3 +1,9 @@
+## v0.12.0 (2025-01-08)
+
+### Feat
+
+- moved back to title page
+
 ## v0.11.0 (2025-01-07)
 
 ### Feat
