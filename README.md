@@ -1,6 +1,5 @@
 # Flappy Bird with Q-Learning
 
-## Introduction
 Reinforcement learning is the systematized approach of learning from sequential decisions. Agents iteratively learn from the environment's response to actions, which consists of the state update and a numerical reward signal. It allows the discovery of solutions that are counterintuitive to humans. It is the foundation of breakthroughs in go, chess, and protein folding.
 
 In this repository, I replicate prior work on the flappy bird game. I technically was successful, but had significant issues with the stability of learning. Upon further reflection, I noticed that all prior work also had significant issues with the stability of learning, but avoided showing this problem through clever display tricks, or chart omission.
@@ -37,6 +36,11 @@ Learning the optimal action distribution for each state is more stable, because 
 ### Deep Q Learning
 Q-Learning is the value-based policy-free approach to reinforcement learning. The agent needs to learn a function $S \times A \rightarrow \mathbb{R}$ that approximates the expected return of each state-action pair. Classical approaches for this problem is to use a Q-Table, which stores the value of each state-action pair in a table.
 
+The problem with Q-Tables is that it is mathematically impossible to represent the value of each state-action pair in a table, if the state space is continuous. Even if the state space is discrete, the table is too large to be practical. The only solution is to compress the state space so that Q-tables are feasible.[kyokin78. rl-flappybird, Github, 2019](https://github.com/kyokin78/rl-flappybird) utilizes this approach to beat the game.
+
+[Mnih et al. 2013](https://www.nature.com/articles/nature14236) used convolutional neural networks to compress the state space, and beat Atari games. To contend with the dynamics of the environment, they randomly sampled from a replay buffer to decorrelate the samples. Then they learned the Q-values of each state-action pair, using temporal difference learning.
+
+$$Q(s,a,\theta) \leftarrow r + \gamma \max_{a'} Q(s',a',\theta)$$
 
 ## Related Work
 
@@ -68,12 +72,7 @@ Q-Learning is the value-based policy-free approach to reinforcement learning. Th
 
 ## Methods
 
-- Stable-baselines3 open-source implementations of RL Algorithms
-- Utilized flappy-bird-gymnasium environment by gymnasium
-- Utilized Double-Q Learning to stabilize the learning process
-  - Reduces overestimation of Q-values by using the max of a slower moving target network
-- Utilized Dueling DQN to make state representation more efficient
-  - Represent the state-action as a state + advantage.
+Stable-baselines3 is a library for reinforcement learning written in pytorch. There are many other RL libraries like [stable-baselines](https://github.com/hill-a/stable-baselines), [raylib](https://github.com/ray-project/ray), and [acme](https://github.com/deepmind/acme), but I found those libraries to be outdated and not well-maintained.
 
 ### Results
 
@@ -88,6 +87,9 @@ Q-Learning is the value-based policy-free approach to reinforcement learning. Th
 
 ### Stability of Learning
 ![dqn_scores](./paper/dqn_scores.png)
+[Video of version 2](videos/dqn_flappybird_v2_20250103-030423.mp4)
+- Seems that more layers helped generalize faster
+  - Could be due to the fact that the agent is able to learn more complex patterns
 - Catastrophic forgetting
   - evident in all prior work
 - Mnih et al. 2013,
