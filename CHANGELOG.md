@@ -1,3 +1,14 @@
+## v0.13.0 (2025-01-08)
+
+### Feat
+
+- Add comprehensive work documentation on Path-Planning and Automated Target Recognition
+- Enhance README with detailed Flappy Bird environment description and reinforcement learning methods
+
+### Fix
+
+- Update README to clarify previous work on Dueling DQN
+
 ## v0.12.0 (2025-01-08)
 
 ### Feat
