@@ -1,4 +1,4 @@
-# Catastrophic Forgetting Cover-Up
+# Flappy Bird with Q-Learning
 
 ## Introduction
 Reinforcement learning
@@ -6,24 +6,9 @@ Reinforcement learning
 - discover solutions counterintuitive to humans
 - foundation of breakthroughs in go, chess, and protein folding
 
-### Reseach Focus
-- **Catastrophic Forgetting**
-  - Issue in value-based reinforcement learning methods from the adaptive nature of neural networks
-
-This paper covers the following:
-- Introduction to Reinforcement Learning
-- Introduction to Value-based Methods
-- Introduction to Deep Q-Learning
-- Flappy Bird Example
-- Stability Issues with DQN
-
-Most RL papers
-- don't mention catastrophic forgetting
-  - makes their research look worse
-- catastrophic forgetting
-  - fundamental issue in function approximation based
-- downplay the difficulty of resolving the problem
-- use/not-use data visualization methods to hide the issue
+**Contributions:**
+- Attempted to reproduce prior work
+- Had issues with stability of learning
 
 ## Background
 
@@ -102,30 +87,35 @@ Before Q-Learning Networks:
 
 
 ## Methods
+
 - Stable-baselines3 open-source implementations of RL Algorithms
 - Utilized flappy-bird-gymnasium environment by gymnasium
+- Utilized Double-Q Learning to stabilize the learning process
+  - Reduces overestimation of Q-values by using the max of a slower moving target network
+- Utilized Dueling DQN to make state representation more efficient
+  - Represent the state-action as a state + advantage.
+
+### Results
 
 | Name | Mean Score (1000 runs) | Std Score (1000 runs) |
 |------|------------------------|-----------------------|
-| dqn_flappybird_v1_1.3M_steps | 20.82| 15.83 |
-| dqn_flappybird_v2_2M_steps | 121.43 | 142.98 |
+| 2 layers 1.3M steps | 172| 192 |
+| 3 layers 2M steps | 567| 388 |
+| 4 layers 2M steps | 416 | 360 |
+| 5 layers 2M steps | 689 | 366 |
+| 6 layers 2M steps | 877 | 342 |
+| handcrafted agent | **954** | **170** |
 
-Note: Change the v1 to be more descriptive. Only supposed to be identified by me right now.
+### Stability of Learning
+`chart that shows catastrophic forgetting`
+- Catastrophic forgetting
+  - evident in all prior work
+- Mnih et al. 2013,
+  - obscures this by choosing optimistic charts
+  - arbitrary q-value chart to show "stability"
+- No other prior work shows catastrophic forgetting
+  - Including this chart makes the research look less valuable
 
-### Results
-1. Original training run was 30M learning steps.
-2. Catastrophic forgetting around 1.2M learning steps, weird jumps in score after that.
-3. Random chance tweaked parameters to get 900 average score. `<Include tensorboard chart here>`
-
-### Ablation DQN
-Cartesian product of all possible combinations of the following:
-1. Double DQN
-2. Dueling DQN
-
-## Criticism of Related Work
-- No mention of catastrophic forgetting.
-- Nobody showed performance over time graph, implying lots of catastrophic forgetting.
-- Mnih et al. 2013 didn't encounter it as much because no local maxima to get stuck in. Mnih mentions it and dodges the graphs that would show very poor performance.
 
 ### Further Work
 - Learn directly from pixels
@@ -142,4 +132,6 @@ Cartesian product of all possible combinations of the following:
 - research implications
 
 ## Postmortem
-One of my biggest mistakes was that I started by trying to reimplment my own QTable approach. This wasted lots of time and effort by trying to resolve problems that had already been solved in prior work. I thought that looking at their code would be "cheating." I did not see that I was not adding anything new to the field by doing this. It would have been better to review all prior work and try to replicate it before I built my own QTable approach.
+- should have started with replicating prior work
+- had trouble deciding when to stop
+  - deadlines exist

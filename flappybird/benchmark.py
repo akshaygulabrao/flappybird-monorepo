@@ -17,7 +17,7 @@ from weights2mp4 import create_environment, record_gameplay
 def evaluate_agent(agent):
     env = create_environment(render_mode=None)
     scores = []
-    for i in tqdm(range(10)):
+    for i in tqdm(range(1000)):
         score = record_gameplay(env, agent.decide)
         scores.append(score)
     return {'name': agent.name, 'mean score (1000 runs)': np.mean(scores), 'std score (1000 runs)': np.std(scores), 'training_time(hours)': 200}
@@ -38,7 +38,6 @@ model0 = HandcraftedAgent()
 model1 = DQNAgent(Path("data/dqn_flappybird_v1_21700000_steps.zip"))
 
 evals.append(evaluate_agent(model0))
-evals.append(evaluate_agent(model1))
 
 # Print the markdown table
 print_markdown_table(evals)

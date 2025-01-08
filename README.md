@@ -1,27 +1,70 @@
-# How many neurons do you need to play flappy bird perfectly?
+# Flappy Bird with Q-Learning
 
 ## Introduction
+Reinforcement learning
+- heuristic search of sequential decision making
+- discover solutions counterintuitive to humans
+- foundation of breakthroughs in go, chess, and protein folding
 
-- **Research Focus:**
-  - Investigate the neural network complexity required for optimal Flappy Bird performance.
-  - Define "perfect performance" as surpassing a handcrafted evaluation agent scoring 900/1000 over 10 runs.
+**Contributions:**
+- Attempted to reproduce prior work
+- Had issues with stability of learning
 
-- **Contributions:**
-  - Development of a high-performing handcrafted agent.
-  - Analysis of network complexity versus performance.
+## Background
 
-- **Methodology Rationale:**
-  - Opt for non-pixel-based learning to explore diverse model types beyond CNNs.
+### Reinforcement Learning
+1. Framework for sequential decision making
+2. Agent learns by observing environment's response to actions
+3. Goal is to maximize the reward signal given by the environment
+  - It's a numerical value
+  - Good reward signals are consistent and achievable
+  - Accurately represent the difference between optimal and suboptimal actions
 
-There are lots of interesting ways to extend this project, but I have to start focusing on communicating my findings instead of more discovery.
+### Markov Decision Processes
+1. Formal name for sequential decision making
+2. 4 components of an MDP
+  - State space $\mathcal{S}$
+  - Action space $\mathcal{A}$
+  - Transition function $P(s'|s,a) \rightarrow [0,1]$
+  - Reward function $R(s,a) \rightarrow \mathbb{R}$
+3. Each interaction with the environment is known as a trajectory
+
+### Types of Reinforcement Learning
+1. There are two dimensions along which RL algorithms can be classified:
+  - Known/Unknown environment dynamics
+  - Learn expected return of each state-action
+  - Most optimal action distribution for each state
+2. Model-Based RL vs Model-Free RL
+  - Sometimes the next state is deterministic wrt action
+    - Map the optimal action to each state
+  - The next state is uncertain
+    - Learn the state transition function
+3. Value-based RL vs Policy-based RL
+  - Value-based: Learn the value function for each state-action
+    - The optimal policy is then trivial
+    - Exploration strategy is a hyperparameter
+  - Policy-based: Learn the optimal action distribution for each state
+    - Exploration strategy is baked into the policy
+    - More stable
+
+### Deep Q Learning
+Before Q-Learning Networks:
+- Q-Tables: learn the value of each state-action pair
+  - Suffer from the curse of dimensionality
+  - Manual feature engineering to compress the state space
+- Q-Learning Networks
+  - Learn the value of each state-action pair
+  - Automates feature engineering
+  - Networks were deep for their time
+
 
 ## Related Work
 
 1. [Chen. Deep Reinforcement Learning for Flappy Bird. Stanford Final Project, 2015](https://cs229.stanford.edu/proj2015/362_report.pdf)
  - Learns from pixels to play flappy bird
- - Uses DQN from Mnih et al.
+ - Uses DQN from Mnih et al. w/ target network
 2. [Yenchenlin. Deep Reinforcement Learning for Flappy Bird. Github, 2016](https://github.com/yenchenlin/DeepLearningFlappyBird)
- - Implementation of the approach. Inspired by the work of Chen.
+ - Implementation of the approach. Inspired by the work of Chen. Modified the velocity so that the bird doesn't jump as high
 3. [johnnycode8. Train the DQN Algorithm on Flappy Bird, Youtube, 2024](https://github.com/johnnycode8/dqn_pytorch)
  - Implements the dueling-dqn approach on the simplified observation space.
 4. [xviniette. Flappy Bird with PPO, Github, 2024](https://github.com/xviniette/FlappyLearning)
@@ -35,66 +78,44 @@ There are lots of interesting ways to extend this project, but I have to start f
 8. [foodsung. DRL-FlappyBird, Github, 2016](https://github.com/foodsung/DRL-FlappyBird)
  - Inspired by yenchenlin. Provides an even more mature implementation.
 
-A winning state for this project is finding a perfect scoring bot for significantly less memory than a q-table for every state.
-
 ## Flappy Bird
 - Mobile game from 2013 that went viral
-- Game mechanics
 - Simple game mechanics make it an ideal candidate for reinforcement learning tasks
 - RL environment exists at [flappy-bird-gymnasium](https://github.com/markub3327/flappy-bird-gymnasium)
 - Simplified observation space 12 features, [0,1]
 
-## Reinforcement Learning Techniques
-Reinforcement learning techniques are roughly divided into two categories:
-1. Value-based methods
-
-### Value-based methods
-1. Implicitly assume optimal action is not a mixed strategy.
-2. More sample efficient, because the value function is computed per action.
-
-### Policy-based methods
-1. Assume that there is a mixed strategy for each state that is optimal.
-2. More stable, because they naturally explore more in each state instead of using hard-coded exploration strategies.
 
 
-## Benchmarking Reinforcement Learning
-- Best achievable average score with a score limit of 1000.
-- Sample inefficiency does not count
-- How close does it get to handcrafted agent.
+## Methods
 
-## Handcrafted evaluation function
-- I made a handcrafted evaluation function.
-- It gets approximately 900 on a training run of 10 runs with a score limit of 1000.
-- I can measure the success of the reinforcement learning agents utilizing how
+- Stable-baselines3 open-source implementations of RL Algorithms
+- Utilized flappy-bird-gymnasium environment by gymnasium
+- Utilized Double-Q Learning to stabilize the learning process
+  - Reduces overestimation of Q-values by using the max of a slower moving target network
+- Utilized Dueling DQN to make state representation more efficient
+  - Represent the state-action as a state + advantage.
 
-## Simplified State Space
-- How well do the other benchmarks perform?
-- How well does my agent perform?
-  * Parameters that impacted the performance of my agent
-
-## DQN
-1. Rough idea from Mnih et al. 2013, but incorporates improvements
-2. Uses network architecture of [12, 64, 64, 2]
-3. Double DQN
-4. Dueling DQN
+### Results
 
 | Name | Mean Score (1000 runs) | Std Score (1000 runs) |
 |------|------------------------|-----------------------|
-| Handcrafted Agent | `<mean>` | `<std>` |
-| dqn_flappybird_v1_1300000_steps | 20.82| 15.83 |
+| 2 layers 1.3M steps | 172| 192 |
+| 3 layers 2M steps | 567| 388 |
+| 4 layers 2M steps | 416 | 360 |
+| 5 layers 2M steps | 689 | 366 |
+| 6 layers 2M steps | 877 | 342 |
+| handcrafted agent | **954** | **170** |
 
-Note: Change the v1 to be more descriptive. Only supposed to be identified by me right now.
+### Stability of Learning
+`chart that shows catastrophic forgetting`
+- Catastrophic forgetting
+  - evident in all prior work
+- Mnih et al. 2013,
+  - obscures this by choosing optimistic charts
+  - arbitrary q-value chart to show "stability"
+- No other prior work shows catastrophic forgetting
+  - Including this chart makes the research look less valuable
 
-### Results
-1. Original training run was 30M learning steps.
-2. Catastrophic forgetting around 1.2M learning steps, weird jumps in score after that.
-3. Random chance tweaked parameters to get 900 average score. `<Include tensorboard chart here>`
-
-### Ablation DQN
-Cartesian product of all possible combinations of the following:
-1. Double DQN
-2. Dueling DQN
-3. {Prioritized Experience Replay, Hindsight Experience Replay}
 
 ### Further Work
 - Learn directly from pixels
@@ -102,6 +123,7 @@ Cartesian product of all possible combinations of the following:
 - Experiment with Partially Observable Environments
 - Try Hindsight Experience Replay
 - Try Policy-based methods
+- Duplicated neurons with different learning rates
 
 ## Conclusion
 - Summary of findings
@@ -110,4 +132,6 @@ Cartesian product of all possible combinations of the following:
 - research implications
 
 ## Postmortem
-One of my biggest mistakes was that I started by trying to reimplment my own QTable approach. This wasted lots of time and effort by trying to resolve problems that had already been solved in prior work. I thought that looking at their code would be "cheating." I did not see that I was not adding anything new to the field by doing this. It would have been better to review all prior work and try to replicate it before I built my own QTable approach.
+- should have started with replicating prior work
+- had trouble deciding when to stop
+  - deadlines exist
