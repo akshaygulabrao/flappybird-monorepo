@@ -4,6 +4,18 @@ Reinforcement learning is the systematized approach of learning from sequential 
 
 In this repository, I replicate prior work on the flappy bird game. I technically was successful, but had significant issues with the stability of learning. Upon further reflection, I noticed that all prior work also had significant issues with the stability of learning, but avoided showing this problem through clever display tricks, or chart omission.
 
+## Flappy Bird
+Flappy bird is a mobile game from 2013 that went viral. The concept is simple: fly through gaps in a stream of pillars. The pillars are of varying heights. The difficulty lies is precisely managing the velocity and position of the bird against gravity. [Play Flappy Bird](https://flappybird.io).
+
+The observation space in this environment is 12 features: the height of the last pipe, the height of the next 2 pipes, the horizontal distances to each of the 3 pipes, the velocity of the bird, and the y-position of the bird. The action space is 2 actions: jump and do nothing. Jumping makes you move upward on the screen, and you must weight for gravity to naturally bring you back down.
+
+The reward system in this game is:
+- 0.1 points for staying alive
+- -0.5 points for hitting the top of the screen
+- -1 point for dying
+- 1 point for passing through a pipe
+
+
 ## Background
 
 ### Markov Decision Processes
@@ -20,7 +32,7 @@ $S_0, A_0, R_1, S_1, A_1, R_2, \ldots, S_T$
 
 The agent's goal is to learn a policy $\pi(s) \rightarrow a$ that maximizes the reward signal. The reward signal isn't given by the reward received during a single timestep, but rather the sum of rewards received over the entire trajectory. When making a decision, the agent must consider the future rewards it can expect to receive, but discount them by a factor of $\gamma \in [0,1]$ because they are less certain. $\gamma$ close to 1 makes the agent more forward-looking into the future. $\gamma$ close to 0 makes the agent look for immediate rewards. In most reinforcement learning problems, $\gamma$ is set to 0.99. With calculus, even if t approaches infinity, the sum of rewards is finite.
 
-$$ \sum_{t=0}^{\infty} \gamma^t r_{t+1} = \frac{r_1}{1-\gamma} $$
+$$ \sum_{t=0}^{\infty} \gamma r_{t+1} = \frac{1}{1-\gamma} $$
 
 When the environment dynamics, $P(s'|s,a)$, are known, the agent can use dynamic programming to solve the MDP. It can walk backwards from the terminal state to the initial state, and calculate the value of each state-action pair.If environment dynamics is unknown, the agent can use reinforcement learning to learn the best action for each state.
 
@@ -28,7 +40,7 @@ When the environment dynamics, $P(s'|s,a)$, are known, the agent can use dynamic
 The agent has two approaches for learning the best action for each state: (1) Learning the expected return of each state-action pair or (2) learning the optimal action distribution for each state.
 
 #### Value-based Reinforcement Learning
-Learning the expected return of each state-action pair is faster, but needs a hardcoded exploration strategy, which needs to be tuned for each environment. For example, using a learning rate of .1 causes the agent to learn absolutely nothing in the flappy bird environment because the optimal action distribution is to jump about 1/20 of the time.
+Learning the expected return of each state-action pair is faster, but needs a hardcoded exploration strategy, which needs to be tuned for each environment. For example, using a learning rate of .1 causes the agent to learn absolutely nothing in the flappy bird environment because the optimal action distribution is to jump about 1/20 of the time. The probability that this distribution is selected naturally is extremely low.
 
 #### Policy-based Reinforcement Learning
 Learning the optimal action distribution for each state is more stable, because it naturally systematically explores the environment. Learning action distributions also naturally expand to deal with continuous action spaces.
@@ -44,35 +56,22 @@ $$Q(s,a,\theta) \leftarrow r + \gamma \max_{a'} Q(s',a',\theta)$$
 
 ## Related Work
 
-1. [Chen. Deep Reinforcement Learning for Flappy Bird. Stanford Final Project, 2015](https://cs229.stanford.edu/proj2015/362_report.pdf)
- - Learns from pixels to play flappy bird
- - Uses DQN from Mnih et al. w/ target network
-2. [Yenchenlin. Deep Reinforcement Learning for Flappy Bird. Github, 2016](https://github.com/yenchenlin/DeepLearningFlappyBird)
- - Implementation of the approach. Inspired by the work of Chen. Modified the velocity so that the bird doesn't jump as high
-3. [johnnycode8. Train the DQN Algorithm on Flappy Bird, Youtube, 2024](https://github.com/johnnycode8/dqn_pytorch)
- - Implements the dueling-dqn approach on the simplified observation space.
-4. [xviniette. Flappy Bird with PPO, Github, 2024](https://github.com/xviniette/FlappyLearning)
- - Implements the PPO approach on the simplified observation space.
-5. [markub3327. flappy-bird-gymnasium, Github, 2023](https://github.com/markub3327/flappy-bird-gymnasium)
- - Implements the Dueling DQN approach on two state representations: (1) the simplified observation space (2) LIDAR measurements of the environment.
-6. [SarvagaVaish. FlappyBirdRL, Github, 2014](https://github.com/SarvagyaVaish/FlappyBirdRL)
- - Simplified observation space and used a QTable to implement a perfect agent.
-7. [kyokin78. rl-flappybird, Github, 2019](https://github.com/kyokin78/rl-flappybird)
- - Further simplified the simplified observation space and used a QTable to implement a perfect agent. Inspired by the work of SarvagaVaish.
-8. [foodsung. DRL-FlappyBird, Github, 2016](https://github.com/foodsung/DRL-FlappyBird)
- - Inspired by yenchenlin. Provides an even more mature implementation.
+After flappy bird was released around 2013, the first python implementation of flappy bird was released by [sourabhv FlappyBird Github. 2014](https://github.com/sourabhv/FlapPyBird). It quickly became popular and was used as a benchmark for reinforcement learning. The first replication of Mnih et al. 2013 was [Chen. Deep Reinforcement Learning for Flappy Bird. Stanford Final Project, 2015](https://cs229.stanford.edu/proj2015/362_report.pdf). This paper used the same convolutional neural network architecture as Mnih et al. 2013, and made the gaps wider to make the game easier to play at first, then narrowed them back to make the game hard when the network learned how to navigate the gaps. Widening the pipes made the reward signal less sparse and more consistent, which made leanring faster. [Yenchenlin. Deep Reinforcement Learning for Flappy Bird. Github, 2016](https://github.com/yenchenlin/DeepLearningFlappyBird) replicated the work of Chen. Neither of these papers show a score vs time chart, indicating that they ran into the same problem of catastrophic forgetting that I encountered, but hid the chart to preserve the quality of their research. [markub3327. flappy-bird-gymnasium, Github, 2023](https://github.com/markub3327/flappy-bird-gymnasium)[johnnycode8. Train the DQN Algorithm on Flappy Bird, Youtube, 2024](https://github.com/johnnycode8/dqn_pytorch) use a dueling DQN approach in the simplified state space, but avoids showing the score vs time chart.
 
-## Flappy Bird
-- Mobile game from 2013 that went viral
-- Simple game mechanics make it an ideal candidate for reinforcement learning tasks
-- RL environment exists at [flappy-bird-gymnasium](https://github.com/markub3327/flappy-bird-gymnasium)
-- Simplified observation space 12 features, [0,1]
-
-
+One popular method used to solve the issue of catastrophic forgetting is to move back to using a Q-Table to store the state. [SarvagaVaish. FlappyBirdRL, Github, 2014](https://github.com/SarvagyaVaish/FlappyBirdRL) [kyokin78. rl-flappybird, Github, 2019](https://github.com/kyokin78/rl-flappybird) both compressed the state space by storing the relative difference in heights instead of the absolute positions, allowing for a more compressed state space and completely bypassing the problem of catastrophic forgetting.
 
 ## Methods
 
-Stable-baselines3 is a library for reinforcement learning written in pytorch. There are many other RL libraries like [stable-baselines](https://github.com/hill-a/stable-baselines), [raylib](https://github.com/ray-project/ray), and [acme](https://github.com/deepmind/acme), but I found those libraries to be outdated and not well-maintained.
+Stable-baselines3 is a library for reinforcement learning, providing wrappers and environments for many common reinforcement learning problems. It is a fork of the open-baselines library started by OpenAI in 2015, that is currently stale. I used the DQN algorithm that stable-baselines3 provides. The DQN algorithm in stable-baselines3 makes two improvements over the original DQN algorithm: (1) A double DQN approach to reduce the overestimation of Q-values, (2) A dueling DQN approach to more efficiently represent the Q-value for each state-action.
+
+### Double DQN
+Double DQN attempts to solve the overestimation of Q-values that happen implicitly when applying the TD-update. The original update is:
+
+$$Q(s,a,\theta) \leftarrow r + \gamma \max_{a'} Q(s',a',\theta)$$
+
+`<finish reasoning here>`
+### Dueling DQN
+The Dueling DQN improves the efficiency of the network approximation by separating the Q-value into two components: the state value $V(s)$ and the advantage function $A(s,a)$. The state value is the mean Q-value of all actions, and the advantage function is the deviation of the Q-value of each action from the state value. This was emprically shown to improve the expressiveness of the Q network.
 
 ### Results
 
